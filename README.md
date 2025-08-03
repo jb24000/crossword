@@ -17,12 +17,12 @@ A retro NES‑style crossword puzzle game with leaderboard, light/dark mode, sou
 
 ---
 
-## 📸 Screenshots  
+## 📸 Screenshots
 
 <p align="center">
-  <img src="assets/screenshot-dark.png" alt="NES Crossword Dark Mode" width="45%">
-  <img src="assets/screenshot-light.png" alt="NES Crossword Light Mode" width="45%">
-</p>  
+  <img src="assets/Screenshot%202025-08-03%20035701.png" alt="NES Crossword in Dark Mode" width="45%" />
+  <img src="assets/Screenshot%202025-08-03%20035718.png" alt="NES Crossword in Light Mode" width="45%" />
+</p>
 
 ---
 
