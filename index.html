@@ -140,15 +140,15 @@ body.light-mode .lobby-form label {
 .music-controls {
   display: flex;
   gap: 6px;
-  margin-top: -6px; /* closer to Sound */
+  margin-top: -6px;
   position: relative;
-  left: 48%;
-  transform: translateX(-40%); /* align under 'd' */
+  left: 49%;
+  transform: translateX(-40%);
 }
 .music-controls button {
   font-family: 'Press Start 2P', cursive;
-  font-size: 12px;
-  padding: 6px 10px;
+  font-size: 11px;
+  padding: 5px 8px;
   border: none;
   border-radius: 6px;
   background: #00ff88;
@@ -163,7 +163,7 @@ body.light-mode .lobby-form label {
 
 /* Game Area Styles */
 #game-area {
-  display: none; /* Hidden by default */
+  display: none;
   width: 100%;
   max-width: 600px;
   margin: 20px auto;
@@ -325,17 +325,19 @@ body.light-mode .lobby-form label {
   font-size: 14px;
   font-weight: bold;
   margin-bottom: 10px;
-  color: #000;
+  color: #FFD700;
   border-bottom: 2px solid #FFD700;
   display: inline-block;
   padding-bottom: 4px;
   letter-spacing: 1px;
+  text-align: center;
 }
 .tabs {
   display: flex;
   justify-content: center;
+  gap: 12px;
   margin-bottom: 10px;
-  gap: 8px;
+  flex-wrap: nowrap;
 }
 .tab {
   padding: 6px 12px;
@@ -434,205 +436,26 @@ body.light-mode {
   background: rgba(0,0,0,0.05);
 }
 
-/* Responsive */
-@media (max-width: 600px) {
-  .container { margin: 10px 2vw 0 2vw; padding: 18px 4vw 12px 4vw; }
-  .title { font-size: 20px; }
-  #game-area { margin: 10px 2vw; padding: 15px; }
-  .cell { width: 25px; height: 25px; font-size: 12px; }
-  .clue-number { font-size: 7px; }
-  .clues { grid-template-columns: 1fr; gap: 15px; }
-  .game-buttons button { padding: 8px 12px; font-size: 12px; }
-}
-
-/* Mobile Fixes to clone Hangman’s responsive look */
-@media (max-width: 600px) {
-  html, body {
-    height: 100vh !important;
-    min-height: 100vh !important;
-    overflow-x: hidden !important;
-    width: 100vw !important;
-    min-width: 100vw !important;
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-  body {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-  .container {
-    position: fixed !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    margin: 0 !important;
-    width: 98vw !important;
-    max-width: 98vw !important;
-    max-height: 98vh !important;
-    overflow-y: auto !important;
-    box-sizing: border-box !important;
-  }
-}
-	
-.music-controls {
-  display: flex;
-  gap: 6px;
-  margin-top: -6px; /* move closer to Sound */
-  position: relative;
-  left: 49%; 
-  transform: translateX(-40%); /* adjust this until centered under the 'd' */
-}
-
-.music-controls button {
-  font-family: 'Press Start 2P', cursive;
-  font-size: 11px;
-  padding: 5px 8px;
-  border: none;
-  border-radius: 6px;
-  background: #00ff88;
-  color: #222;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.music-controls button:hover {
-  background: #00cc6a;
-}
-
-/* Ensure leaderboard tabs stay horizontal */
-.tabs {
-  display: flex;
-  justify-content: center;
-  gap: 12px; /* spacing between tabs */
-  margin-bottom: 10px;
-  flex-wrap: nowrap;
-}
-
-.tab {
-  display: inline-block;
-  white-space: nowrap;
-}
-
-/* Fix Leaderboard section to match Hangman */
-.leaderboard {
-  text-align: center;
-  margin-top: 18px;
-}
-
-.leaderboard-title {
-  font-size: 14px; /* Match Hangman */
-  font-weight: bold;
-  margin-bottom: 10px;
-  color: #FFD700;
-  border-bottom: 2px solid #FFD700;
-  display: inline-block;
-  padding-bottom: 4px;
-  letter-spacing: 1px;
-  text-align: center;
-}
-
-.tabs {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin-bottom: 10px;
-  flex-wrap: nowrap;
-}
-
-.tab {
-  font-size: 12px; /* Match Hangman */
-  display: inline-block;
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-/* Leaderboard player list fix */
-.leaderboard ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  text-align: center;
-}
-
-.leaderboard li {
-  font-size: 10px; /* Match Hangman tabs size */
-  margin: 4px 0;
-  font-weight: normal;
-}
-
-/* Dark mode */
-body.dark-mode .leaderboard li {
-  color: #fff;
-}
-
-/* Light mode */
-body.light-mode .leaderboard li {
-  color: #222;
-}
-
-/* --- Mobile-Only Fixes --- */
-@media (max-width: 600px) {
-  html, body {
-    height: 100vh !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow: hidden !important; /* lock page from scrolling */
-  }
-
-  .toggles {
-    justify-content: space-evenly; /* keep Dark/Sound toggles aligned */
-    width: 100%;
-    margin-bottom: 12px;
-  }
-
-  .music-controls {
-    margin-top: -4px; /* closer to Sound */
-    left: 50%;
-    transform: translateX(-35%);
-    gap: 6px;
-  }
-
-  #game-area {
-    position: fixed !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    width: 98vw !important;
-    height: 98vh !important;
-    max-width: 98vw !important;
-    max-height: 98vh !important;
-    overflow-y: auto !important; /* scroll only inside game box */
-    overflow-x: hidden !important;
-    box-sizing: border-box !important;
-  }
-
-  /* Scale down crossword grid */
-  #crossword {
-    transform: scale(0.9);
-    transform-origin: top center;
-  }
-
-  .cell {
-    width: 24px !important;
-    height: 24px !important;
-    font-size: 12px !important;
-  }
-
-  /* Limit clue section */
-  .clues {
-    max-height: 38vh; 
-    overflow-y: auto;
-  }
-}
-
+/* --- Mobile Fixes --- */
 @media (max-width: 600px) {
   html, body {
     height: 100vh !important;
     margin: 0 !important;
     padding: 0 !important;
     overflow: hidden !important;
+  }
+
+  .toggles {
+    justify-content: space-evenly;
+    width: 100%;
+    margin-bottom: 12px;
+  }
+
+  .music-controls {
+    margin-top: -4px;
+    left: 50%;
+    transform: translateX(-35%);
+    gap: 6px;
   }
 
   #game-area {
@@ -643,10 +466,10 @@ body.light-mode .leaderboard li {
     height: 100vh !important;
     max-width: 100vw !important;
     max-height: 100vh !important;
-    overflow-y: auto !important; /* allow vertical scroll if puzzle + clues too tall */
+    overflow-y: auto !important;
     overflow-x: hidden !important;
     box-sizing: border-box !important;
-    padding-bottom: 70px; /* space so tabs are not cut off */
+    padding-bottom: 70px;
   }
 
   #crossword {
@@ -655,8 +478,14 @@ body.light-mode .leaderboard li {
     margin-bottom: 10px;
   }
 
+  .cell {
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 12px !important;
+  }
+
   .clues {
-    max-height: 35vh; /* keep clue list from overflowing */
+    max-height: 35vh;
     overflow-y: auto;
   }
 
@@ -690,7 +519,6 @@ body.light-mode .leaderboard li {
     font-size: 11px;
   }
 }
-
 
 
   </style>
