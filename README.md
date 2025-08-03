@@ -28,23 +28,15 @@ A retro NES‑style crossword puzzle game with leaderboard, light/dark mode, sou
 
 ## 🛠️ Tech Stack  
 
+## 🛠️ Tech Stack  
+
 <p align="center">
-  <a href="https://developer.mozilla.org/en-US/docs/Web/HTML">
-    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original.svg" alt="HTML5" width="40" height="40"/>
-  </a>
-  <a href="https://developer.mozilla.org/en-US/docs/Web/CSS">
-    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/css3/css3-original.svg" alt="CSS3" width="40" height="40"/>
-  </a>
-  <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript">
-    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="JavaScript" width="40" height="40"/>
-  </a>
-  <a href="https://dictionaryapi.dev/">
-    <img src="https://img.icons8.com/?size=100&id=lH1eEc9NMRnw&format=png&color=000000" alt="Dictionary API" width="40" height="40"/>
-  </a>
-  <a href="https://developers.google.com/youtube/iframe_api_reference">
-    <img src="https://img.icons8.com/?size=100&id=19318&format=png&color=000000" alt="YouTube API" width="40" height="40"/>
-  </a>
-</p>  
+  <a href="https://developer.mozilla.org/en-US/docs/Web/HTML"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original.svg" alt="HTML5" width="40" height="40"/></a>
+  <a href="https://developer.mozilla.org/en-US/docs/Web/CSS"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/css3/css3-original.svg" alt="CSS3" width="40" height="40"/></a>
+  <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="JavaScript" width="40" height="40"/></a>
+  <a href="https://dictionaryapi.dev/" title="Dictionary API"><img src="https://www.svgrepo.com/show/435304/dictionary.svg" alt="Dictionary API" width="40" height="40"/></a>
+  <a href="https://developers.google.com/youtube/iframe_api_reference"><img src="https://img.icons8.com/ios-filled/50/000000/youtube-play--v1.png" alt="YouTube API" width="40" height="40"/></a>
+</p>
 
 ---
 
