@@ -78,7 +78,6 @@ input:checked+.slider:before { transform:translateX(26px); }
   margin: 0 auto;
   box-sizing: border-box;
 }
-
 .lobby-form label {
   font-size: 13px;
   color: #fff;
@@ -137,6 +136,31 @@ body.light-mode .lobby-form label {
   background: #00cc6a;
 }
 
+/* Music Controls */
+.music-controls {
+  display: flex;
+  gap: 6px;
+  margin-top: -6px; /* closer to Sound */
+  position: relative;
+  left: 48%;
+  transform: translateX(-40%); /* align under 'd' */
+}
+.music-controls button {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 12px;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  background: #00ff88;
+  color: #222;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.music-controls button:hover {
+  background: #00cc6a;
+}
+
 /* Game Area Styles */
 #game-area {
   display: none; /* Hidden by default */
@@ -158,13 +182,13 @@ body.light-mode .lobby-form label {
   border-radius: 8px;
   border: 2px solid #FFD700;
   box-shadow: 2px 2px 0px #333;
-  display: inline-block; /* To make padding/border work better */
+  display: inline-block;
 }
 #crossword {
   display: grid;
   gap: 2px;
   background: #222;
-  margin: 20px auto; /* Center the grid */
+  margin: 20px auto;
   padding: 10px;
   border: 4px solid #FFD700;
   border-radius: 12px;
@@ -333,10 +357,11 @@ body.light-mode .lobby-form label {
 .leaderboard ul { list-style: none; padding: 0; margin: 0; }
 .leaderboard li {
   margin: 5px 0;
-  font-size: 12px; /* Match Hangman */
-  color: #000;     /* Black text in light mode */
+  font-size: 12px;
+  color: #000;
   font-weight: normal;
 }
+
 /* Light mode */
 body.light-mode {
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
@@ -419,20 +444,162 @@ body.light-mode {
   .clues { grid-template-columns: 1fr; gap: 15px; }
   .game-buttons button { padding: 8px 12px; font-size: 12px; }
 }
-    }
+
+/* Mobile Fixes to clone Hangman’s responsive look */
+@media (max-width: 600px) {
+  html, body {
+    height: 100vh !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    width: 100vw !important;
+    min-width: 100vw !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  body {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .container {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    margin: 0 !important;
+    width: 98vw !important;
+    max-width: 98vw !important;
+    max-height: 98vh !important;
+    overflow-y: auto !important;
+    box-sizing: border-box !important;
+  }
+}
+	
+.music-controls {
+  display: flex;
+  gap: 6px;
+  margin-top: -6px; /* move closer to Sound */
+  position: relative;
+  left: 49%; 
+  transform: translateX(-40%); /* adjust this until centered under the 'd' */
+}
+
+.music-controls button {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 11px;
+  padding: 5px 8px;
+  border: none;
+  border-radius: 6px;
+  background: #00ff88;
+  color: #222;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.music-controls button:hover {
+  background: #00cc6a;
+}
+
+/* Ensure leaderboard tabs stay horizontal */
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 12px; /* spacing between tabs */
+  margin-bottom: 10px;
+  flex-wrap: nowrap;
+}
+
+.tab {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* Fix Leaderboard section to match Hangman */
+.leaderboard {
+  text-align: center;
+  margin-top: 18px;
+}
+
+.leaderboard-title {
+  font-size: 14px; /* Match Hangman */
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #FFD700;
+  border-bottom: 2px solid #FFD700;
+  display: inline-block;
+  padding-bottom: 4px;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  flex-wrap: nowrap;
+}
+
+.tab {
+  font-size: 12px; /* Match Hangman */
+  display: inline-block;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+/* Leaderboard player list fix */
+.leaderboard ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+}
+
+.leaderboard li {
+  font-size: 10px; /* Match Hangman tabs size */
+  margin: 4px 0;
+  font-weight: normal;
+}
+
+/* Dark mode */
+body.dark-mode .leaderboard li {
+  color: #fff;
+}
+
+/* Light mode */
+body.light-mode .leaderboard li {
+  color: #222;
+}
+
+
   </style>
 </head>
 <body>
-  <div class="container" id="lobby">
-    <div class="title" id="title">🎮 NES Crossword 🎮</div>
-    <div class="toggles">
-      <label>🌙 Dark
-        <label class="switch"><input type="checkbox" id="darkToggle" checked><span class="slider"></span></label>
+<div class="container" id="lobby">
+  <div class="title" id="title">🎮 NES Crossword 🎮</div>
+  
+  <div class="toggles">
+    <label>🌙 Dark
+      <label class="switch">
+        <input type="checkbox" id="darkToggle" checked>
+        <span class="slider"></span>
       </label>
-      <label>🔊 Sound
-        <label class="switch"><input type="checkbox" id="soundToggle"><span class="slider"></span></label>
+    </label>
+    <label>🔊 Sound
+      <label class="switch">
+        <input type="checkbox" id="soundToggle">
+        <span class="slider"></span>
       </label>
-    </div>
+    </label>
+  </div>
+
+  <!-- 🎵 Music Controls placed BELOW Sound toggle -->
+  <div class="music-controls">
+    <button id="prev-track">⏮ Prev</button>
+    <button id="next-track">Next ⏭</button>
+  </div>
+
     <div class="settings-label" id="settings-label">SETTINGS</div>
     <form class="lobby-form" id="lobby-form" onsubmit="return false;">
       <label for="player1-name">Player 1 Name:</label>
@@ -506,6 +673,8 @@ body.light-mode {
   <!-- Win/Lose Sounds -->
   <audio id="win-sound" src="win.mp3" preload="auto"></audio>
   <audio id="lose-sound" src="lose.mp3" preload="auto"></audio>
+  
+ 
 
   <script>
     // --- Word Banks (from your Hangman game) ---
@@ -1656,43 +1825,109 @@ body.light-mode {
       handleMusic(this.checked);
     });
 
-   function handleMusic(on) {
+ let musicStarted = false;
+
+// 🎵 Playlist of YouTube video IDs
+const playlist = [
+  "fs0BCIUQ7Ws", // Track 1
+  "VpqoE7ft284", // Track 2
+  "TfEZaH_BBLY", // Track 3
+  "V6SJzeegnck", // Track 4
+  "pzkAKQJv19A", // Track 5
+  "CIWo9e1Qzos", // Track 6
+  "WvzVYC507gU", // Track 7
+];
+let currentTrackIndex = 0;
+
+// Load and play a track
+function loadTrack(index) {
+  currentTrackIndex = (index + playlist.length) % playlist.length; // wrap around
+  const videoId = playlist[currentTrackIndex];
+  ytMusicIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=0&controls=0&muted=0&enablejsapi=1`;
+  musicStarted = true;
+}
+
+// Handle Sound toggle 
+function handleMusic(on) {
   if (on) {
     if (!musicStarted) {
-      ytMusicIframe.src = "https://www.youtube.com/embed/BlBbwNgeOqQ?autoplay=1&loop=1&playlist=BlBbwNgeOqQ&controls=0&muted=1&enablejsapi=1";
-      musicStarted = true;
-    }
-    setTimeout(() => {
+      loadTrack(currentTrackIndex); // start first track
+    } else {
       try {
-        ytMusicIframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+        ytMusicIframe.contentWindow.postMessage(
+          '{"event":"command","func":"playVideo","args":""}', '*'
+        );
       } catch (e) {
         console.log('Music play failed:', e);
       }
-    }, 1000);
+    }
   } else {
     try {
-      ytMusicIframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+      ytMusicIframe.contentWindow.postMessage(
+        '{"event":"command","func":"pauseVideo","args":""}', '*'
+      );
     } catch (e) {
       console.log('Music pause failed:', e);
     }
   }
 }
-    let musicStarted = false;
-    handleMusic(false);
 
-    // --- Sound Effects ---
-    function playWinSound() {
-      if (soundToggle.checked) {
-        winSound.currentTime = 0;
-        winSound.play();
+// Manual Next / Prev buttons (respect sound toggle)
+document.getElementById("next-track").addEventListener("click", () => {
+  loadTrack(currentTrackIndex + 1, soundToggle.checked);
+});
+document.getElementById("prev-track").addEventListener("click", () => {
+  loadTrack(currentTrackIndex - 1, soundToggle.checked);
+});
+
+// Auto-advance when track ends (respect sound toggle)
+window.addEventListener("message", function (event) {
+  if (event.data && typeof event.data === "string" && event.data.includes('"infoDelivery"')) {
+    try {
+      const data = JSON.parse(event.data);
+      if (data.event === "infoDelivery" && data.info && data.info.playerState === 0) {
+        // PlayerState === 0 => track ended
+        loadTrack(currentTrackIndex + 1, soundToggle.checked);
       }
+    } catch (e) {
+      console.log("Player message parse error:", e);
     }
-    function playLoseSound() {
-      if (soundToggle.checked) {
-        loseSound.currentTime = 0;
-        loseSound.play();
+  }
+});
+
+// --- Sound Effects ---
+function playWinSound() {
+  if (soundToggle.checked) {
+    winSound.currentTime = 0;
+    winSound.play();
+  }
+}
+function playLoseSound() {
+  if (soundToggle.checked) {
+    loseSound.currentTime = 0;
+    loseSound.play();
+  }
+}
+
+// Updated loadTrack to accept autoplay flag
+function loadTrack(index, shouldPlay = true) {
+  currentTrackIndex = (index + playlist.length) % playlist.length; // wrap around
+  ytMusicIframe.src = `https://www.youtube.com/embed/${playlist[currentTrackIndex]}?autoplay=${shouldPlay ? 1 : 0}&loop=1&playlist=${playlist[currentTrackIndex]}&controls=0&muted=0&enablejsapi=1`;
+  musicStarted = true;
+
+  if (shouldPlay) {
+    setTimeout(() => {
+      try {
+        ytMusicIframe.contentWindow.postMessage(
+          '{"event":"command","func":"playVideo","args":""}', '*'
+        );
+      } catch (e) {
+        console.log("Music auto-play failed:", e);
       }
-    }
+    }, 1000);
+  }
+}
+
 
     // --- Lobby Mode Selection Logic ---
     document.getElementById('start-single').addEventListener('click', function () {
@@ -2274,6 +2509,26 @@ body.light-mode {
       renderLeaderboard();
       setTheme(localStorage.getItem('theme') === 'dark' ? 'dark' : 'light');
     });
+	
+	// Track the last clicked crossword cell
+let lastClickedCell = null;
+
+// Capture clicks on crossword cells
+document.addEventListener("click", function(event) {
+  if (event.target.classList.contains("cell") && !event.target.classList.contains("black")) {
+    lastClickedCell = event.target;
+  }
+});
+
+// Listen for Backspace/Delete to clear the letter
+document.addEventListener("keydown", function(event) {
+  if (lastClickedCell && (event.key === "Backspace" || event.key === "Delete")) {
+    event.preventDefault();
+    lastClickedCell.textContent = ""; // remove the letter
+  }
+});
+	
   </script>
 </body>
+
 </html>
