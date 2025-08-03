@@ -572,6 +572,64 @@ body.light-mode .leaderboard li {
   color: #222;
 }
 
+/* --- Mobile-Only Fixes --- */
+@media (max-width: 600px) {
+  html, body {
+    height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important; /* lock page from scrolling */
+  }
+
+  .toggles {
+    justify-content: space-evenly; /* keep Dark/Sound toggles aligned */
+    width: 100%;
+    margin-bottom: 12px;
+  }
+
+  .music-controls {
+    margin-top: -4px; /* closer to Sound */
+    left: 50%;
+    transform: translateX(-35%);
+    gap: 6px;
+  }
+
+  #game-area {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 98vw !important;
+    height: 98vh !important;
+    max-width: 98vw !important;
+    max-height: 98vh !important;
+    overflow-y: auto !important; /* scroll only inside game box */
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Scale down crossword grid */
+  #crossword {
+    transform: scale(0.9);
+    transform-origin: top center;
+  }
+
+  .cell {
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 12px !important;
+  }
+
+  /* Limit clue section */
+  .clues {
+    max-height: 38vh; 
+    overflow-y: auto;
+  }
+}
+
+
+
+
 
   </style>
 </head>
@@ -673,6 +731,7 @@ body.light-mode .leaderboard li {
   <!-- Win/Lose Sounds -->
   <audio id="win-sound" src="win.mp3" preload="auto"></audio>
   <audio id="lose-sound" src="lose.mp3" preload="auto"></audio>
+  
   
  
 
