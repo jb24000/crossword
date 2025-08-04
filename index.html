@@ -186,33 +186,34 @@ body.light-mode .lobby-form label {
 }
 #crossword {
   display: grid;
-  gap: 2px;
-  background: #222;
+  gap: 1px;
+  background: #000;
   margin: 20px auto;
-  padding: 10px;
+  padding: 8px;
   border: 4px solid #FFD700;
   border-radius: 12px;
-  box-shadow: inset 4px 4px 0px #000, 4px 4px 0px #333;
+  box-shadow: inset 4px 4px 0px #333, 4px 4px 0px #666;
   justify-content: center;
+  width: fit-content;
 }
 .cell {
-  width: 30px; height: 30px;
+  width: 32px; height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f8f9fa;
+  background: #ffffff;
   color: #000;
   font-size: 14px;
-  border: 1px solid #444;
+  border: 2px solid #333;
   position: relative;
   cursor: pointer;
   font-weight: bold;
   box-shadow: inset -2px -2px 0px #bbb, inset 2px 2px 0px #fff;
 }
 .black {
-  background: #111;
-  border: 1px solid #000;
-  box-shadow: inset -2px -2px 0px #000;
+  background: #111 !important;
+  border: 2px solid #000 !important;
+  box-shadow: inset -2px -2px 0px #000 !important;
   cursor: default;
 }
 .clue-number {
@@ -378,8 +379,6 @@ body.light-mode {
   color: #222;
   border: 1px solid #bbb;
 }
-.mode-button.light-mode { background: #00ff88; color: #222; }
-.mode-button.light-mode:hover { background: #00cc6a; }
 #hud.light-mode {
   color: #222;
   border-color: #222;
@@ -387,9 +386,9 @@ body.light-mode {
   box-shadow: 2px 2px 0px #bbb;
 }
 #crossword.light-mode {
-  background: #f0f0f0;
+  background: #ddd;
   border-color: #222;
-  box-shadow: inset 4px 4px 0px #ddd, 4px 4px 0px #aaa;
+  box-shadow: inset 4px 4px 0px #bbb, 4px 4px 0px #aaa;
 }
 .cell.light-mode {
   background: #ffffff;
@@ -398,9 +397,9 @@ body.light-mode {
   box-shadow: inset -1px -1px 0px #ccc, inset 1px 1px 0px #fff;
 }
 .black.light-mode {
-  background: #333333 !important;
-  border-color: #222 !important;
-  box-shadow: inset -1px -1px 0px #222 !important;
+  background: #888 !important;
+  border-color: #666 !important;
+  box-shadow: inset -1px -1px 0px #666 !important;
 }
 .clue-number.light-mode { color: #666; }
 .highlight.light-mode {
@@ -510,26 +509,27 @@ body.light-mode {
   }
   
   #crossword {
-    background: #222; /* EXACT same as desktop */
+    background: #000; /* EXACT same as desktop */
     border: 4px solid #FFD700; /* EXACT same as desktop */
     margin: 15px auto;
-    padding: 8px;
-    box-shadow: inset 4px 4px 0px #000, 4px 4px 0px #333; /* EXACT same as desktop */
+    padding: 6px;
+    box-shadow: inset 4px 4px 0px #333, 4px 4px 0px #666; /* EXACT same as desktop */
+    gap: 1px;
   }
   
   #crossword.light-mode {
-    background: #eee; /* EXACT same as desktop */
+    background: #ddd; /* EXACT same as desktop */
     border: 4px solid #222; /* EXACT same as desktop */
     box-shadow: inset 4px 4px 0px #bbb, 4px 4px 0px #aaa; /* EXACT same as desktop */
   }
   
   .cell { 
-    width: 22px; 
-    height: 22px; 
-    font-size: 11px;
-    background: #f8f9fa; /* EXACT same as desktop */
+    width: 28px; 
+    height: 28px; 
+    font-size: 12px;
+    background: #ffffff; /* EXACT same as desktop */
     color: #000; /* EXACT same as desktop */
-    border: 1px solid #444; /* EXACT same as desktop */
+    border: 2px solid #333; /* EXACT same as desktop */
     box-shadow: inset -2px -2px 0px #bbb, inset 2px 2px 0px #fff; /* EXACT same as desktop */
   }
   
@@ -542,14 +542,14 @@ body.light-mode {
   
   .black {
     background: #111 !important; /* EXACT same as desktop */
-    border: 1px solid #000 !important; /* EXACT same as desktop */
+    border: 2px solid #000 !important; /* EXACT same as desktop */
     box-shadow: inset -2px -2px 0px #000 !important; /* EXACT same as desktop */
   }
   
   .black.light-mode {
-    background: #ccc !important; /* EXACT same as desktop */
-    border: 1px solid #aaa !important; /* EXACT same as desktop */
-    box-shadow: inset -2px -2px 0px #aaa !important; /* EXACT same as desktop */
+    background: #888 !important; /* EXACT same as desktop */
+    border: 2px solid #666 !important; /* EXACT same as desktop */
+    box-shadow: inset -2px -2px 0px #666 !important; /* EXACT same as desktop */
   }
   
   .clue-number { 
@@ -643,11 +643,6 @@ body.light-mode {
     background: #00cc6a; /* EXACT same as desktop */
   }
   
-  .mode-button.light-mode {
-    background: #00ff88; /* EXACT same as desktop */
-    color: #222; /* EXACT same as desktop */
-  }
-  
   .music-controls {
     left: 50%;
     transform: translateX(-50%);
@@ -739,32 +734,6 @@ body.light-mode {
   .leaderboard li.light-mode {
     color: #222; /* EXACT same as desktop */
   }
-}
-
-.music-controls {
-  display: flex;
-  gap: 6px;
-  margin-top: -6px; /* move closer to Sound */
-  position: relative;
-  left: 49%; 
-  transform: translateX(-40%); /* adjust this until centered under the 'd' */
-}
-
-.music-controls button {
-  font-family: 'Press Start 2P', cursive;
-  font-size: 11px;
-  padding: 5px 8px;
-  border: none;
-  border-radius: 6px;
-  background: #00ff88;
-  color: #222;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.music-controls button:hover {
-  background: #00cc6a;
 }
 
 /* Ensure leaderboard tabs stay horizontal */
@@ -893,7 +862,7 @@ body.light-mode {
     width="0"
     height="0"
     frameborder="0"
-    allow="encrypted-media"
+    allow="autoplay; encrypted-media"
     src=""
   ></iframe>
    </div>
@@ -936,11 +905,13 @@ body.light-mode {
   <div class="fade-black" id="fade-black"></div>
 
   <!-- Win/Lose Sounds -->
-  <audio id="win-sound" src="win.mp3" preload="auto"></audio>
-  <audio id="lose-sound" src="lose.mp3" preload="auto"></audio>
+  <audio id="win-sound" preload="auto">
+    <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav">
+  </audio>
+  <audio id="lose-sound" preload="auto">
+    <source src="https://www.soundjay.com/misc/sounds/fail-buzzer-02.wav" type="audio/wav">
+  </audio>
   
- 
-
   <script>
     // --- Word Banks (from your Hangman game) ---
     const wordBanks = {
@@ -2109,8 +2080,9 @@ let currentTrackIndex = 0;
 function loadTrack(index) {
   currentTrackIndex = (index + playlist.length) % playlist.length;
   const videoId = playlist[currentTrackIndex];
-  ytMusicIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=0&controls=0&muted=0&enablejsapi=1`;
+  ytMusicIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=0&controls=0&mute=0&enablejsapi=1`;
   musicStarted = true;
+  console.log(`Loading track ${currentTrackIndex + 1}: ${videoId}`);
 }
 
 // Handle Sound toggle 
@@ -2118,14 +2090,11 @@ function handleMusic(on) {
   if (on) {
     // Start Track 1 immediately when sound is turned on
     loadTrack(0); // Always start with Track 1
+    console.log('Sound turned ON - starting music...');
   } else {
-    try {
-      ytMusicIframe.contentWindow.postMessage(
-        '{"event":"command","func":"pauseVideo","args":""}', '*'
-      );
-    } catch (e) {
-      console.log('Music pause failed:', e);
-    }
+    ytMusicIframe.src = "";
+    musicStarted = false;
+    console.log('Sound turned OFF - stopping music...');
   }
 }
 
@@ -2159,25 +2128,55 @@ window.addEventListener("message", function (event) {
 // --- Sound Effects ---
 function playWinSound() {
   if (soundToggle.checked) {
-    winSound.currentTime = 0;
-    winSound.play();
+    // Create synthetic win sound
+    try {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+      oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
+      oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+      
+      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+      
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.5);
+    } catch (e) {
+      console.log('Win sound failed:', e);
+    }
   }
 }
+
 function playLoseSound() {
   if (soundToggle.checked) {
-    loseSound.currentTime = 0;
-    loseSound.play();
+    // Create synthetic lose sound
+    try {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.frequency.setValueAtTime(220, audioContext.currentTime); // A3
+      oscillator.frequency.setValueAtTime(196, audioContext.currentTime + 0.2); // G3
+      oscillator.frequency.setValueAtTime(174.61, audioContext.currentTime + 0.4); // F3
+      
+      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.6);
+      
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.6);
+    } catch (e) {
+      console.log('Lose sound failed:', e);
+    }
   }
 }
-
-// Load and start playing a track
-function loadTrack(index) {
-  currentTrackIndex = (index + playlist.length) % playlist.length;
-  const videoId = playlist[currentTrackIndex];
-  ytMusicIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=0&controls=0&muted=0&enablejsapi=1`;
-  musicStarted = true;
-}
-
 
     // --- Lobby Mode Selection Logic ---
     document.getElementById('start-single').addEventListener('click', function () {
@@ -2375,15 +2374,15 @@ function loadTrack(index) {
     function settingsForDifficulty(diff) {
   switch (diff) {
     case "kids":
-      return { min: 10, max: 15, size: 8 };
+      return { min: 8, max: 12, size: 7 };
     case "easy":
-      return { min: 15, max: 20, size: 10 };
+      return { min: 10, max: 15, size: 8 };
     case "medium":
-      return { min: 20, max: 30, size: 12 };
+      return { min: 12, max: 18, size: 9 };
     case "hard":
-      return { min: 30, max: 40, size: 15 };
+      return { min: 15, max: 22, size: 11 };
     default:
-      return { min: 20, max: 30, size: 12 };
+      return { min: 12, max: 18, size: 9 };
   }
 }
 
@@ -2511,17 +2510,17 @@ function loadTrack(index) {
         }
       }
       
-      // Use smart cropping on mobile, full grid on desktop
-      const isMobile = window.innerWidth <= 600;
-      if (isMobile && hasContent) {
-        // Add minimal padding on mobile
+      // Use smart cropping to zoom in on content
+      if (hasContent) {
+        // Add minimal padding
         minRow = Math.max(0, minRow - 1);
         maxRow = Math.min(gridSize - 1, maxRow + 1);
         minCol = Math.max(0, minCol - 1);
         maxCol = Math.min(gridSize - 1, maxCol + 1);
         
         const actualWidth = maxCol - minCol + 1;
-        const cellSize = '24px';
+        const isMobile = window.innerWidth <= 600;
+        const cellSize = isMobile ? '28px' : '32px';
         
         cw.style.gridTemplateColumns = `repeat(${actualWidth}, ${cellSize})`;
         cw.style.width = 'fit-content';
@@ -2530,43 +2529,6 @@ function loadTrack(index) {
         // Render only the visible area with words
         for (let r = minRow; r <= maxRow; r++) {
           for (let c = minCol; c <= maxCol; c++) {
-            let div = document.createElement("div");
-            div.className = "cell";
-            div.dataset.row = r;
-            div.dataset.col = c;
-            div.classList.toggle('light-mode', localStorage.getItem('theme') === 'light');
-
-            if (solutionGrid[r][c] === "") {
-              div.classList.add("black");
-              div.classList.toggle('light-mode', localStorage.getItem('theme') === 'light');
-            } else {
-              let starter = wordsMap.find(w => w.row === r && w.col === c && w.clueNumber);
-              if (starter) {
-                let num = document.createElement("div");
-                num.className = "clue-number";
-                num.textContent = starter.clueNumber;
-                num.classList.toggle('light-mode', localStorage.getItem('theme') === 'light');
-                div.appendChild(num);
-              }
-              if (playerGrid[r][c] !== "") {
-                div.textContent = playerGrid[r][c].toUpperCase();
-              }
-              div.onclick = () => selectWord(wordsMap.find(w =>
-                r >= w.row && c >= w.col &&
-                (w.dir === "across" ? r === w.row && c < w.col + w.word.length : c === w.col && r < w.row + w.word.length)
-              ));
-            }
-            cw.appendChild(div);
-          }
-        }
-      } else {
-        // Desktop - render full grid as before
-        cw.style.gridTemplateColumns = `repeat(${gridSize},30px)`;
-        cw.style.width = 'auto';
-        cw.style.maxWidth = 'none';
-        
-        for (let r = 0; r < gridSize; r++) {
-          for (let c = 0; c < gridSize; c++) {
             let div = document.createElement("div");
             div.className = "cell";
             div.dataset.row = r;
@@ -2605,7 +2567,9 @@ function loadTrack(index) {
         let data = await res.json();
         let def = data[0]?.meanings?.[0]?.definitions?.[0]?.definition;
         if (def) return def;
-      } catch (e) { }
+      } catch (e) { 
+        console.log('Dictionary API failed for word:', word, e);
+      }
       return `${word.length}-letter word starting with ${word[0].toUpperCase()}`;
     }
 
@@ -2846,7 +2810,19 @@ document.addEventListener("click", function(event) {
 document.addEventListener("keydown", function(event) {
   if (lastClickedCell && (event.key === "Backspace" || event.key === "Delete")) {
     event.preventDefault();
-    lastClickedCell.textContent = ""; // remove the letter
+    const row = parseInt(lastClickedCell.dataset.row);
+    const col = parseInt(lastClickedCell.dataset.col);
+    if (!isNaN(row) && !isNaN(col)) {
+      playerGrid[row][col] = "";
+      lastClickedCell.textContent = "";
+      
+      // Keep clue number if it exists
+      const clueNumber = lastClickedCell.querySelector('.clue-number');
+      if (clueNumber) {
+        lastClickedCell.innerHTML = '';
+        lastClickedCell.appendChild(clueNumber);
+      }
+    }
   }
 });
 	
