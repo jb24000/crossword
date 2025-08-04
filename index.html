@@ -629,7 +629,7 @@ body.light-mode .leaderboard li {
     height="0"
     frameborder="0"
     allow="autoplay; encrypted-media"
-    src="https://www.youtube.com/embed/BlBbwNgeOqQ?autoplay=1&loop=1&playlist=BlBbwNgeOqQ&controls=0&muted=1&enablejsapi=1"
+    `https://www.youtube.com/embed/${playlist[currentTrackIndex]}?autoplay=${shouldPlay ? 1 : 0}&loop=1&playlist=${playlist[currentTrackIndex]}&controls=0&muted=0&enablejsapi=1`
   ></iframe>
    </div>
     <div class="leaderboard">
@@ -2532,3 +2532,4 @@ document.addEventListener("keydown", function(event) {
 </body>
 
 </html>
+
