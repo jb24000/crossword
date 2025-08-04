@@ -437,10 +437,11 @@ body.light-mode {
   color: #222;
 }
 
-/* Mobile responsive - fix all the issues */
+/* Mobile responsive - match desktop colors exactly */
 @media (max-width: 600px) {
   body {
-    background: linear-gradient(135deg, #8fa4ea 0%, #9d7bc2 100%); /* Lighter gradient for mobile */
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* EXACT same as desktop */
+    color: #fff;
   }
   
   body.light-mode {
@@ -453,16 +454,21 @@ body.light-mode {
     padding: 18px 15px 12px 15px; 
     width: calc(100% - 20px);
     max-width: none;
-    background: rgba(255,255,255,0.1); /* Lighter background for mobile */
+    background: rgba(0,0,0,0.4); /* EXACT same as desktop */
   }
   
   .container.light-mode {
-    background: rgba(255,255,255,0.9);
+    background: rgba(255,255,255,0.7); /* EXACT same as desktop */
     color: #222;
   }
   
   .title { 
     font-size: 18px; 
+    color: #00ff88; /* EXACT same as desktop */
+  }
+  
+  .title.light-mode {
+    color: #00b36b; /* EXACT same as desktop */
   }
   
   .toggles {
@@ -475,6 +481,19 @@ body.light-mode {
     align-items: center;
     gap: 8px;
     font-size: 11px;
+    color: #fff;
+  }
+  
+  .toggles label.light-mode {
+    color: #222;
+  }
+  
+  .settings-label {
+    color: #FFD700; /* EXACT same as desktop */
+  }
+  
+  .settings-label.light-mode {
+    color: #222; /* EXACT same as desktop */
   }
   
   #game-area { 
@@ -482,102 +501,110 @@ body.light-mode {
     padding: 15px; 
     width: calc(100% - 20px);
     max-width: none;
-    background: rgba(255,255,255,0.1); /* Lighter background for mobile game area */
-    border: 2px solid rgba(255,215,0,0.3); /* Subtle border separator */
+    background: rgba(0,0,0,0.4); /* EXACT same as desktop */
   }
   
   #game-area.light-mode {
-    background: rgba(255,255,255,0.9);
+    background: rgba(255,255,255,0.7); /* EXACT same as desktop */
     color: #222;
-    border: 2px solid rgba(34,34,34,0.3);
   }
   
   #crossword {
-    background: #333; /* Lighter crossword background for mobile */
-    border: 3px solid #FFD700;
+    background: #222; /* EXACT same as desktop */
+    border: 4px solid #FFD700; /* EXACT same as desktop */
     margin: 15px auto;
     padding: 8px;
-    box-shadow: inset 2px 2px 0px #000, 2px 2px 0px #555;
+    box-shadow: inset 4px 4px 0px #000, 4px 4px 0px #333; /* EXACT same as desktop */
   }
   
   #crossword.light-mode {
-    background: #f5f5f5;
-    border: 3px solid #222;
-    box-shadow: inset 2px 2px 0px #ddd, 2px 2px 0px #bbb;
+    background: #eee; /* EXACT same as desktop */
+    border: 4px solid #222; /* EXACT same as desktop */
+    box-shadow: inset 4px 4px 0px #bbb, 4px 4px 0px #aaa; /* EXACT same as desktop */
   }
   
   .cell { 
     width: 22px; 
     height: 22px; 
     font-size: 11px;
-    background: #fff; /* Ensure cells are white */
-    color: #000;
+    background: #f8f9fa; /* EXACT same as desktop */
+    color: #000; /* EXACT same as desktop */
+    border: 1px solid #444; /* EXACT same as desktop */
+    box-shadow: inset -2px -2px 0px #bbb, inset 2px 2px 0px #fff; /* EXACT same as desktop */
   }
   
   .cell.light-mode {
-    background: #fff;
-    color: #222;
+    background: #fff; /* EXACT same as desktop */
+    color: #222; /* EXACT same as desktop */
+    border-color: #bbb; /* EXACT same as desktop */
+    box-shadow: inset -2px -2px 0px #ddd, inset 2px 2px 0px #eee; /* EXACT same as desktop */
   }
   
   .black {
-    background: #444 !important; /* Lighter black cells for mobile */
-    border: 1px solid #333;
+    background: #111 !important; /* EXACT same as desktop */
+    border: 1px solid #000 !important; /* EXACT same as desktop */
+    box-shadow: inset -2px -2px 0px #000 !important; /* EXACT same as desktop */
   }
   
   .black.light-mode {
-    background: #ddd !important;
-    border: 1px solid #bbb;
+    background: #ccc !important; /* EXACT same as desktop */
+    border: 1px solid #aaa !important; /* EXACT same as desktop */
+    box-shadow: inset -2px -2px 0px #aaa !important; /* EXACT same as desktop */
   }
   
   .clue-number { 
     font-size: 6px; 
-    color: #666;
+    color: #444; /* EXACT same as desktop */
   }
   
   .clue-number.light-mode {
-    color: #888;
+    color: #888; /* EXACT same as desktop */
   }
   
   .clues { 
     grid-template-columns: 1fr; 
     gap: 12px; 
-    background: rgba(255,255,255,0.05);
-    padding: 10px;
-    border-radius: 8px;
-    margin-top: 10px;
-  }
-  
-  .clues.light-mode {
-    background: rgba(0,0,0,0.05);
   }
   
   .clue-list {
-    background: rgba(255,255,255,0.1);
-    border: 2px solid rgba(255,215,0,0.5);
+    background: rgba(0,0,0,0.5); /* EXACT same as desktop */
+    border: 2px solid #FFD700; /* EXACT same as desktop */
+    box-shadow: 3px 3px 0px #000; /* EXACT same as desktop */
   }
   
   .clue-list.light-mode {
-    background: rgba(255,255,255,0.7);
-    border: 2px solid rgba(34,34,34,0.5);
+    background: rgba(255,255,255,0.5); /* EXACT same as desktop */
+    border: 2px solid #222; /* EXACT same as desktop */
+    box-shadow: 3px 3px 0px #bbb; /* EXACT same as desktop */
   }
   
   .clue-list h3 {
-    color: #FFD700;
+    color: #FFD700; /* EXACT same as desktop */
     font-size: 11px;
+    border-bottom: 1px solid #FFD700; /* EXACT same as desktop */
   }
   
   .clue-list h3.light-mode {
-    color: #222;
+    color: #222; /* EXACT same as desktop */
+    border-bottom: 1px solid #222; /* EXACT same as desktop */
   }
   
   .clue-list li {
-    color: #fff;
+    color: #fff; /* EXACT same as desktop */
     font-size: 9px;
     line-height: 1.5;
   }
   
   .clue-list li.light-mode {
-    color: #222;
+    color: #222; /* EXACT same as desktop */
+  }
+  
+  .clue-list li:hover {
+    color: #00ff88; /* EXACT same as desktop */
+  }
+  
+  .clue-list li.light-mode:hover {
+    color: #00b36b; /* EXACT same as desktop */
   }
   
   .game-buttons { 
@@ -591,6 +618,12 @@ body.light-mode {
     font-size: 11px;
     flex: 1;
     min-width: 100px;
+    background: #00ff88; /* EXACT same as desktop */
+    color: #222; /* EXACT same as desktop */
+  }
+  
+  .game-buttons button:hover {
+    background: #00cc6a; /* EXACT same as desktop */
   }
   
   .mode-buttons { 
@@ -602,6 +635,17 @@ body.light-mode {
     flex: 1;
     min-width: 120px;
     font-size: 14px;
+    background: #00ff88; /* EXACT same as desktop */
+    color: #333; /* EXACT same as desktop */
+  }
+  
+  .mode-button:hover {
+    background: #00cc6a; /* EXACT same as desktop */
+  }
+  
+  .mode-button.light-mode {
+    background: #00ff88; /* EXACT same as desktop */
+    color: #222; /* EXACT same as desktop */
   }
   
   .music-controls {
@@ -613,40 +657,87 @@ body.light-mode {
   .music-controls button {
     font-size: 9px;
     padding: 6px 8px;
+    background: #00ff88; /* EXACT same as desktop */
+    color: #222; /* EXACT same as desktop */
+  }
+  
+  .music-controls button:hover {
+    background: #00cc6a; /* EXACT same as desktop */
   }
   
   #hud {
     font-size: 9px;
     padding: 6px 8px;
     word-break: break-word;
-    background: rgba(0,0,0,0.6);
+    background: rgba(0,0,0,0.4); /* EXACT same as desktop */
+    color: #FFD700; /* EXACT same as desktop */
+    border: 2px solid #FFD700; /* EXACT same as desktop */
+    box-shadow: 2px 2px 0px #333; /* EXACT same as desktop */
   }
   
   #hud.light-mode {
-    background: rgba(255,255,255,0.8);
-    color: #222;
-    border-color: #222;
+    background: rgba(0,0,0,0.1); /* EXACT same as desktop */
+    color: #222; /* EXACT same as desktop */
+    border: 2px solid #222; /* EXACT same as desktop */
+    box-shadow: 2px 2px 0px #bbb; /* EXACT same as desktop */
   }
   
   .player-turn-display {
     font-size: 14px;
+    color: #00ff88; /* EXACT same as desktop */
+  }
+  
+  .player-turn-display.light-mode {
+    color: #00b36b; /* EXACT same as desktop */
   }
   
   .high-score-display {
     font-size: 11px;
+    color: #FFD700; /* EXACT same as desktop */
+  }
+  
+  .high-score-display.light-mode {
+    color: #222; /* EXACT same as desktop */
   }
   
   .leaderboard-title {
     font-size: 12px;
+    color: #FFD700; /* EXACT same as desktop */
+    border-bottom: 2px solid #FFD700; /* EXACT same as desktop */
+  }
+  
+  .leaderboard-title.light-mode {
+    color: #222; /* EXACT same as desktop */
+    border-bottom: 2px solid #222; /* EXACT same as desktop */
   }
   
   .tab {
     font-size: 10px;
     padding: 6px 8px;
+    color: #fff; /* EXACT same as desktop */
+  }
+  
+  .tab.light-mode {
+    color: #222; /* EXACT same as desktop */
+  }
+  
+  .tab.active {
+    color: #FFD700; /* EXACT same as desktop */
+    border-color: #FFD700; /* EXACT same as desktop */
+  }
+  
+  .tab.active.light-mode {
+    color: #FFD700; /* EXACT same as desktop */
+    border-color: #FFD700; /* EXACT same as desktop */
   }
   
   .leaderboard li {
     font-size: 9px;
+    color: #fff; /* EXACT same as desktop */
+  }
+  
+  .leaderboard li.light-mode {
+    color: #222; /* EXACT same as desktop */
   }
 }
 
@@ -2728,7 +2819,7 @@ function loadTrack(index, shouldPlay = true) {
       let penalty = 0;
       if (!freeHintUsed) {
         freeHintUsed = true;
-        showFade(`🆓 Free hint! "${hintCell.letter.toUpperCase()}" revealed in "${wordToHint.word.toUpperCase()}"`);
+        showFade(`🆓 Free hint! "${hintCell.letter.toUpperCase()}" revealed`);
       } else {
         if (currentDifficulty === 'kids') penalty = 3;
         else if (currentDifficulty === 'easy') penalty = 5;
@@ -2738,7 +2829,7 @@ function loadTrack(index, shouldPlay = true) {
         currentPuzzleScore -= penalty;
         if (currentPuzzleScore < 0) currentPuzzleScore = 0;
         updateHUD();
-        showFade(`⚠️ Hint used! -${penalty} points. "${hintCell.letter.toUpperCase()}" revealed in "${wordToHint.word.toUpperCase()}"`);
+        showFade(`⚠️ Hint used! -${penalty} points. "${hintCell.letter.toUpperCase()}" revealed`);
       }
       checkWordCompletion(wordToHint);
     }
