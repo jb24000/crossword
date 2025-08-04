@@ -893,8 +893,8 @@ body.light-mode {
     width="0"
     height="0"
     frameborder="0"
-    allow="autoplay; encrypted-media"
-    src="https://www.youtube.com/embed/BlBbwNgeOqQ?autoplay=1&loop=1&playlist=BlBbwNgeOqQ&controls=0&muted=1&enablejsapi=1"
+    allow="encrypted-media"
+    src=""
   ></iframe>
    </div>
     <div class="leaderboard">
@@ -2105,12 +2105,25 @@ const playlist = [
 ];
 let currentTrackIndex = 0;
 
-// Load and play a track
+// Load and play a track (no autoplay)
 function loadTrack(index) {
-  currentTrackIndex = (index + playlist.length) % playlist.length; // wrap around
+  currentTrackIndex = (index + playlist.length) % playlist.length;
   const videoId = playlist[currentTrackIndex];
-  ytMusicIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=0&controls=0&muted=0&enablejsapi=1`;
+  ytMusicIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=0&loop=0&controls=0&muted=0&enablejsapi=1`;
   musicStarted = true;
+  
+  // Only start playing if sound is enabled
+  if (soundToggle.checked) {
+    setTimeout(() => {
+      try {
+        ytMusicIframe.contentWindow.postMessage(
+          '{"event":"command","func":"playVideo","args":""}', '*'
+        );
+      } catch (e) {
+        console.log('Music play failed:', e);
+      }
+    }, 1000);
+  }
 }
 
 // Handle Sound toggle 
@@ -2138,22 +2151,22 @@ function handleMusic(on) {
   }
 }
 
-// Manual Next / Prev buttons (respect sound toggle)
+// Manual Next / Prev buttons
 document.getElementById("next-track").addEventListener("click", () => {
-  loadTrack(currentTrackIndex + 1, soundToggle.checked);
+  loadTrack(currentTrackIndex + 1);
 });
 document.getElementById("prev-track").addEventListener("click", () => {
-  loadTrack(currentTrackIndex - 1, soundToggle.checked);
+  loadTrack(currentTrackIndex - 1);
 });
 
-// Auto-advance when track ends (respect sound toggle)
+// Auto-advance to next track when current track ends
 window.addEventListener("message", function (event) {
   if (event.data && typeof event.data === "string" && event.data.includes('"infoDelivery"')) {
     try {
       const data = JSON.parse(event.data);
       if (data.event === "infoDelivery" && data.info && data.info.playerState === 0) {
-        // PlayerState === 0 => track ended
-        loadTrack(currentTrackIndex + 1, soundToggle.checked);
+        // PlayerState === 0 => track ended, play next track
+        loadTrack(currentTrackIndex + 1);
       }
     } catch (e) {
       console.log("Player message parse error:", e);
@@ -2175,20 +2188,22 @@ function playLoseSound() {
   }
 }
 
-// Updated loadTrack to accept autoplay flag
-function loadTrack(index, shouldPlay = true) {
-  currentTrackIndex = (index + playlist.length) % playlist.length; // wrap around
-  ytMusicIframe.src = `https://www.youtube.com/embed/${playlist[currentTrackIndex]}?autoplay=${shouldPlay ? 1 : 0}&loop=1&playlist=${playlist[currentTrackIndex]}&controls=0&muted=0&enablejsapi=1`;
+// Updated loadTrack to not use deprecated function
+function loadTrack(index) {
+  currentTrackIndex = (index + playlist.length) % playlist.length;
+  const videoId = playlist[currentTrackIndex];
+  ytMusicIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=0&loop=0&controls=0&muted=0&enablejsapi=1`;
   musicStarted = true;
 
-  if (shouldPlay) {
+  // Only start playing if sound is enabled
+  if (soundToggle.checked) {
     setTimeout(() => {
       try {
         ytMusicIframe.contentWindow.postMessage(
           '{"event":"command","func":"playVideo","args":""}', '*'
         );
       } catch (e) {
-        console.log("Music auto-play failed:", e);
+        console.log("Music play failed:", e);
       }
     }, 1000);
   }
@@ -2510,8 +2525,9 @@ function loadTrack(index, shouldPlay = true) {
       const cw = document.getElementById("crossword");
       cw.innerHTML = "";
       
-      // Smart grid bounds calculation for mobile
+      // Smart grid bounds calculation to remove empty spaces
       let minRow = gridSize, maxRow = -1, minCol = gridSize, maxCol = -1;
+      let hasContent = false;
       
       // Find the actual bounds of placed words
       for (let r = 0; r < gridSize; r++) {
@@ -2521,24 +2537,28 @@ function loadTrack(index, shouldPlay = true) {
             maxRow = Math.max(maxRow, r);
             minCol = Math.min(minCol, c);
             maxCol = Math.max(maxCol, c);
+            hasContent = true;
           }
         }
       }
       
-      // Add padding for mobile view
+      // Use smart cropping on mobile, full grid on desktop
       const isMobile = window.innerWidth <= 600;
-      if (isMobile && minRow <= maxRow && minCol <= maxCol) {
+      if (isMobile && hasContent) {
+        // Add minimal padding on mobile
         minRow = Math.max(0, minRow - 1);
         maxRow = Math.min(gridSize - 1, maxRow + 1);
         minCol = Math.max(0, minCol - 1);
         maxCol = Math.min(gridSize - 1, maxCol + 1);
         
         const actualWidth = maxCol - minCol + 1;
-        const actualHeight = maxRow - minRow + 1;
+        const cellSize = '24px';
         
-        cw.style.gridTemplateColumns = `repeat(${actualWidth}, ${isMobile ? '22px' : '30px'})`;
+        cw.style.gridTemplateColumns = `repeat(${actualWidth}, ${cellSize})`;
+        cw.style.width = 'fit-content';
+        cw.style.maxWidth = '100%';
         
-        // Render only the visible area
+        // Render only the visible area with words
         for (let r = minRow; r <= maxRow; r++) {
           for (let c = minCol; c <= maxCol; c++) {
             let div = document.createElement("div");
@@ -2573,6 +2593,9 @@ function loadTrack(index, shouldPlay = true) {
       } else {
         // Desktop - render full grid as before
         cw.style.gridTemplateColumns = `repeat(${gridSize},30px)`;
+        cw.style.width = 'auto';
+        cw.style.maxWidth = 'none';
+        
         for (let r = 0; r < gridSize; r++) {
           for (let c = 0; c < gridSize; c++) {
             let div = document.createElement("div");
