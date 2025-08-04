@@ -2,7 +2,7 @@
   "name": "NES Crossword",
   "short_name": "Crossword",
   "description": "Retro-style crossword puzzle game",
-  "start_url": "/crosswordgame",
+  "start_url": "/repository-name/",
   "display": "standalone",
   "background_color": "#667eea",
   "theme_color": "#667eea",
@@ -20,3 +20,4 @@
   ]
 
 }
+
