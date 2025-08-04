@@ -437,30 +437,216 @@ body.light-mode {
   color: #222;
 }
 
-/* Mobile responsive - minimal changes only */
+/* Mobile responsive - fix all the issues */
 @media (max-width: 600px) {
+  body {
+    background: linear-gradient(135deg, #8fa4ea 0%, #9d7bc2 100%); /* Lighter gradient for mobile */
+  }
+  
+  body.light-mode {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    color: #222;
+  }
+  
   .container { 
     margin: 10px; 
     padding: 18px 15px 12px 15px; 
     width: calc(100% - 20px);
     max-width: none;
+    background: rgba(255,255,255,0.1); /* Lighter background for mobile */
   }
-  .title { font-size: 20px; }
+  
+  .container.light-mode {
+    background: rgba(255,255,255,0.9);
+    color: #222;
+  }
+  
+  .title { 
+    font-size: 18px; 
+  }
+  
+  .toggles {
+    gap: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .toggles label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+  }
+  
   #game-area { 
     margin: 10px; 
     padding: 15px; 
     width: calc(100% - 20px);
     max-width: none;
+    background: rgba(255,255,255,0.1); /* Lighter background for mobile game area */
+    border: 2px solid rgba(255,215,0,0.3); /* Subtle border separator */
   }
-  .cell { width: 25px; height: 25px; font-size: 12px; }
-  .clue-number { font-size: 7px; }
-  .clues { grid-template-columns: 1fr; gap: 15px; }
-  .game-buttons { flex-wrap: wrap; }
-  .game-buttons button { padding: 8px 12px; font-size: 12px; }
-  .mode-buttons { flex-wrap: wrap; }
+  
+  #game-area.light-mode {
+    background: rgba(255,255,255,0.9);
+    color: #222;
+    border: 2px solid rgba(34,34,34,0.3);
+  }
+  
+  #crossword {
+    background: #333; /* Lighter crossword background for mobile */
+    border: 3px solid #FFD700;
+    margin: 15px auto;
+    padding: 8px;
+    box-shadow: inset 2px 2px 0px #000, 2px 2px 0px #555;
+  }
+  
+  #crossword.light-mode {
+    background: #f5f5f5;
+    border: 3px solid #222;
+    box-shadow: inset 2px 2px 0px #ddd, 2px 2px 0px #bbb;
+  }
+  
+  .cell { 
+    width: 22px; 
+    height: 22px; 
+    font-size: 11px;
+    background: #fff; /* Ensure cells are white */
+    color: #000;
+  }
+  
+  .cell.light-mode {
+    background: #fff;
+    color: #222;
+  }
+  
+  .black {
+    background: #444 !important; /* Lighter black cells for mobile */
+    border: 1px solid #333;
+  }
+  
+  .black.light-mode {
+    background: #ddd !important;
+    border: 1px solid #bbb;
+  }
+  
+  .clue-number { 
+    font-size: 6px; 
+    color: #666;
+  }
+  
+  .clue-number.light-mode {
+    color: #888;
+  }
+  
+  .clues { 
+    grid-template-columns: 1fr; 
+    gap: 12px; 
+    background: rgba(255,255,255,0.05);
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+  
+  .clues.light-mode {
+    background: rgba(0,0,0,0.05);
+  }
+  
+  .clue-list {
+    background: rgba(255,255,255,0.1);
+    border: 2px solid rgba(255,215,0,0.5);
+  }
+  
+  .clue-list.light-mode {
+    background: rgba(255,255,255,0.7);
+    border: 2px solid rgba(34,34,34,0.5);
+  }
+  
+  .clue-list h3 {
+    color: #FFD700;
+    font-size: 11px;
+  }
+  
+  .clue-list h3.light-mode {
+    color: #222;
+  }
+  
+  .clue-list li {
+    color: #fff;
+    font-size: 9px;
+    line-height: 1.5;
+  }
+  
+  .clue-list li.light-mode {
+    color: #222;
+  }
+  
+  .game-buttons { 
+    flex-wrap: wrap; 
+    gap: 6px;
+    margin-top: 10px;
+  }
+  
+  .game-buttons button { 
+    padding: 8px 12px; 
+    font-size: 11px;
+    flex: 1;
+    min-width: 100px;
+  }
+  
+  .mode-buttons { 
+    flex-wrap: wrap; 
+    gap: 8px;
+  }
+  
+  .mode-button {
+    flex: 1;
+    min-width: 120px;
+    font-size: 14px;
+  }
+  
   .music-controls {
     left: 50%;
     transform: translateX(-50%);
+    gap: 6px;
+  }
+  
+  .music-controls button {
+    font-size: 9px;
+    padding: 6px 8px;
+  }
+  
+  #hud {
+    font-size: 9px;
+    padding: 6px 8px;
+    word-break: break-word;
+    background: rgba(0,0,0,0.6);
+  }
+  
+  #hud.light-mode {
+    background: rgba(255,255,255,0.8);
+    color: #222;
+    border-color: #222;
+  }
+  
+  .player-turn-display {
+    font-size: 14px;
+  }
+  
+  .high-score-display {
+    font-size: 11px;
+  }
+  
+  .leaderboard-title {
+    font-size: 12px;
+  }
+  
+  .tab {
+    font-size: 10px;
+    padding: 6px 8px;
+  }
+  
+  .leaderboard li {
+    font-size: 9px;
   }
 }
 
@@ -2232,36 +2418,100 @@ function loadTrack(index, shouldPlay = true) {
     function renderGrid() {
       const cw = document.getElementById("crossword");
       cw.innerHTML = "";
-      cw.style.gridTemplateColumns = `repeat(${gridSize},30px)`;
+      
+      // Smart grid bounds calculation for mobile
+      let minRow = gridSize, maxRow = -1, minCol = gridSize, maxCol = -1;
+      
+      // Find the actual bounds of placed words
       for (let r = 0; r < gridSize; r++) {
         for (let c = 0; c < gridSize; c++) {
-          let div = document.createElement("div");
-          div.className = "cell";
-          div.dataset.row = r;
-          div.dataset.col = c;
-          div.classList.toggle('light-mode', localStorage.getItem('theme') === 'light');
-
-          if (solutionGrid[r][c] === "") {
-            div.classList.add("black");
-            div.classList.toggle('light-mode', localStorage.getItem('theme') === 'light');
-          } else {
-            let starter = wordsMap.find(w => w.row === r && w.col === c && w.clueNumber);
-            if (starter) {
-              let num = document.createElement("div");
-              num.className = "clue-number";
-              num.textContent = starter.clueNumber;
-              num.classList.toggle('light-mode', localStorage.getItem('theme') === 'light');
-              div.appendChild(num);
-            }
-            if (playerGrid[r][c] !== "") {
-              div.textContent = playerGrid[r][c].toUpperCase();
-            }
-            div.onclick = () => selectWord(wordsMap.find(w =>
-              r >= w.row && c >= w.col &&
-              (w.dir === "across" ? r === w.row && c < w.col + w.word.length : c === w.col && r < w.row + w.word.length)
-            ));
+          if (solutionGrid[r][c] !== "") {
+            minRow = Math.min(minRow, r);
+            maxRow = Math.max(maxRow, r);
+            minCol = Math.min(minCol, c);
+            maxCol = Math.max(maxCol, c);
           }
-          cw.appendChild(div);
+        }
+      }
+      
+      // Add padding for mobile view
+      const isMobile = window.innerWidth <= 600;
+      if (isMobile && minRow <= maxRow && minCol <= maxCol) {
+        minRow = Math.max(0, minRow - 1);
+        maxRow = Math.min(gridSize - 1, maxRow + 1);
+        minCol = Math.max(0, minCol - 1);
+        maxCol = Math.min(gridSize - 1, maxCol + 1);
+        
+        const actualWidth = maxCol - minCol + 1;
+        const actualHeight = maxRow - minRow + 1;
+        
+        cw.style.gridTemplateColumns = `repeat(${actualWidth}, ${isMobile ? '22px' : '30px'})`;
+        
+        // Render only the visible area
+        for (let r = minRow; r <= maxRow; r++) {
+          for (let c = minCol; c <= maxCol; c++) {
+            let div = document.createElement("div");
+            div.className = "cell";
+            div.dataset.row = r;
+            div.dataset.col = c;
+            div.classList.toggle('light-mode', localStorage.getItem('theme') === 'light');
+
+            if (solutionGrid[r][c] === "") {
+              div.classList.add("black");
+              div.classList.toggle('light-mode', localStorage.getItem('theme') === 'light');
+            } else {
+              let starter = wordsMap.find(w => w.row === r && w.col === c && w.clueNumber);
+              if (starter) {
+                let num = document.createElement("div");
+                num.className = "clue-number";
+                num.textContent = starter.clueNumber;
+                num.classList.toggle('light-mode', localStorage.getItem('theme') === 'light');
+                div.appendChild(num);
+              }
+              if (playerGrid[r][c] !== "") {
+                div.textContent = playerGrid[r][c].toUpperCase();
+              }
+              div.onclick = () => selectWord(wordsMap.find(w =>
+                r >= w.row && c >= w.col &&
+                (w.dir === "across" ? r === w.row && c < w.col + w.word.length : c === w.col && r < w.row + w.word.length)
+              ));
+            }
+            cw.appendChild(div);
+          }
+        }
+      } else {
+        // Desktop - render full grid as before
+        cw.style.gridTemplateColumns = `repeat(${gridSize},30px)`;
+        for (let r = 0; r < gridSize; r++) {
+          for (let c = 0; c < gridSize; c++) {
+            let div = document.createElement("div");
+            div.className = "cell";
+            div.dataset.row = r;
+            div.dataset.col = c;
+            div.classList.toggle('light-mode', localStorage.getItem('theme') === 'light');
+
+            if (solutionGrid[r][c] === "") {
+              div.classList.add("black");
+              div.classList.toggle('light-mode', localStorage.getItem('theme') === 'light');
+            } else {
+              let starter = wordsMap.find(w => w.row === r && w.col === c && w.clueNumber);
+              if (starter) {
+                let num = document.createElement("div");
+                num.className = "clue-number";
+                num.textContent = starter.clueNumber;
+                num.classList.toggle('light-mode', localStorage.getItem('theme') === 'light');
+                div.appendChild(num);
+              }
+              if (playerGrid[r][c] !== "") {
+                div.textContent = playerGrid[r][c].toUpperCase();
+              }
+              div.onclick = () => selectWord(wordsMap.find(w =>
+                r >= w.row && c >= w.col &&
+                (w.dir === "across" ? r === w.row && c < w.col + w.word.length : c === w.col && r < w.row + w.word.length)
+              ));
+            }
+            cw.appendChild(div);
+          }
         }
       }
     }
