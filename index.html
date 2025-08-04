@@ -34,10 +34,10 @@
   <meta name="theme-color" content="#667eea">
   <meta name="msapplication-TileColor" content="#667eea">
   
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+
   <style>
 body {
-  font-family: 'Press Start 2P', cursive;
+  font-family: monospace, 'Courier New', Courier;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: #fff;
   margin: 0;
@@ -175,7 +175,7 @@ body.light-mode .lobby-form label {
   justify-content: center;
 }
 .music-controls button {
-  font-family: 'Press Start 2P', cursive;
+  font-family: monospace, 'Courier New', Courier;
   font-size: 12px;
   padding: 6px 10px;
   border: none;
@@ -201,6 +201,7 @@ body.light-mode .lobby-form label {
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.3);
   text-align: center;
+  position: relative; /* For mobile input positioning */
 }
 #hud {
   margin: 10px;
@@ -390,6 +391,23 @@ body.light-mode .lobby-form label {
   font-size: 12px;
   color: #fff;
   font-weight: normal;
+}
+
+/* Mobile Input - Hidden but functional */
+#mobile-input {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  opacity: 0;
+  z-index: -1;
+  font-size: 16px; /* Prevents zoom on iOS */
+  width: 1px;
+  height: 1px;
+  border: none;
+  background: transparent;
+  color: transparent;
+  outline: none;
+  resize: none;
 }
 
 /* Light mode - White and Grey */
@@ -914,6 +932,9 @@ body.light-mode {
 
   <!-- Crossword Game Area -->
   <div id="game-area">
+    <!-- Hidden input for mobile typing -->
+    <input type="text" id="mobile-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    
     <div class="player-turn-display" id="player-turn-display"></div>
     <div id="hud">Score: 0 | Time: 0 | Words: 0</div>
     <div class="high-score-display" id="high-score-display">High Score: 0</div>
@@ -2022,10 +2043,14 @@ body.light-mode {
     let currentHighScore = 0; // High score for the current difficulty
 
     // Leaderboard persistence
-    let leaderboards = JSON.parse(localStorage.getItem('crosswordLeaderboards')) || { kids: [], easy: [], medium: [], hard: [] };
-    ['kids', 'easy', 'medium', 'hard'].forEach(d => {
-      if (!leaderboards[d]) leaderboards[d] = [];
-    });
+    let leaderboards = {};
+    if (typeof(Storage) !== "undefined" && localStorage) {
+      leaderboards = JSON.parse(localStorage.getItem('crosswordLeaderboards') || '{}');
+    }
+    if (!leaderboards.kids) leaderboards.kids = [];
+    if (!leaderboards.easy) leaderboards.easy = [];
+    if (!leaderboards.medium) leaderboards.medium = [];
+    if (!leaderboards.hard) leaderboards.hard = [];
     let currentLeaderboardTab = 'medium';
 
     // --- UI Elements ---
@@ -2044,22 +2069,31 @@ body.light-mode {
     const ytMusicIframe = document.getElementById('yt-music');
     const winSound = document.getElementById('win-sound');
     const loseSound = document.getElementById('lose-sound');
+    const mobileInput = document.getElementById('mobile-input');
+    const mobileInput = document.getElementById('mobile-input');
 
     // --- Crossword Game Variables ---
     let gridSize, solutionGrid, playerGrid, words, wordsMap = [], clueCounter = 1;
     let activeWord = null, activeCellIndex = 0;
 
     // --- Theme and Sound Toggles ---
-    if (!localStorage.getItem('theme')) localStorage.setItem('theme', 'dark');
-    if (!localStorage.getItem('sound')) localStorage.setItem('sound', 'off');
-
-    darkToggle.checked = localStorage.getItem('theme') === 'dark';
-    soundToggle.checked = localStorage.getItem('sound') === 'on';
+    if (typeof(Storage) !== "undefined" && localStorage) {
+      if (!localStorage.getItem('theme')) localStorage.setItem('theme', 'dark');
+      if (!localStorage.getItem('sound')) localStorage.setItem('sound', 'off');
+      
+      darkToggle.checked = localStorage.getItem('theme') === 'dark';
+      soundToggle.checked = localStorage.getItem('sound') === 'on';
+    } else {
+      darkToggle.checked = true;
+      soundToggle.checked = false;
+    }
     setTheme(darkToggle.checked ? 'dark' : 'light');
 
     darkToggle.addEventListener('change', function () {
       setTheme(this.checked ? 'dark' : 'light');
-      localStorage.setItem('theme', this.checked ? 'dark' : 'light');
+      if (typeof(Storage) !== "undefined" && localStorage) {
+        localStorage.setItem('theme', this.checked ? 'dark' : 'light');
+      }
     });
 
     function setTheme(mode) {
@@ -2090,7 +2124,9 @@ body.light-mode {
     }
 
     soundToggle.addEventListener('change', function () {
-      localStorage.setItem('sound', this.checked ? 'on' : 'off');
+      if (typeof(Storage) !== "undefined" && localStorage) {
+        localStorage.setItem('sound', this.checked ? 'on' : 'off');
+      }
       handleMusic(this.checked);
     });
 
@@ -2199,7 +2235,9 @@ function loadTrack(index) {
     }
 
     function saveLeaderboard() {
-      localStorage.setItem('crosswordLeaderboards', JSON.stringify(leaderboards));
+      if (typeof(Storage) !== "undefined" && localStorage) {
+        localStorage.setItem('crosswordLeaderboards', JSON.stringify(leaderboards));
+      }
     }
 
     function addScore(name, score, difficulty) {
@@ -2253,7 +2291,11 @@ function loadTrack(index) {
     }
 
     function updateHUD() {
-      currentHighScore = parseInt(localStorage.getItem('crosswordHighScore-' + currentDifficulty) || '0');
+      if (typeof(Storage) !== "undefined" && localStorage) {
+        currentHighScore = parseInt(localStorage.getItem('crosswordHighScore-' + currentDifficulty) || '0');
+      } else {
+        currentHighScore = 0;
+      }
       highScoreDisplay.textContent = `High Score: ${currentHighScore}`;
 
       if (isTwoPlayerMode) {
@@ -2324,7 +2366,9 @@ function loadTrack(index) {
       } else {
         if (currentPuzzleScore > currentHighScore) {
           currentHighScore = currentPuzzleScore;
-          localStorage.setItem('crosswordHighScore-' + currentDifficulty, currentHighScore);
+          if (typeof(Storage) !== "undefined" && localStorage) {
+            localStorage.setItem('crosswordHighScore-' + currentDifficulty, currentHighScore);
+          }
         }
         addScore(player1Name, currentPuzzleScore, currentDifficulty);
         setTimeout(() => {
@@ -2509,18 +2553,21 @@ function loadTrack(index) {
             div.className = "cell";
             div.dataset.row = r;
             div.dataset.col = c;
-            div.classList.toggle('light-mode', localStorage.getItem('theme') === 'light');
+            const currentTheme = (typeof(Storage) !== "undefined" && localStorage) ? localStorage.getItem('theme') : 'dark';
+            div.classList.toggle('light-mode', currentTheme === 'light');
 
             if (solutionGrid[r][c] === "") {
               div.classList.add("black");
-              div.classList.toggle('light-mode', localStorage.getItem('theme') === 'light');
+              const currentTheme = (typeof(Storage) !== "undefined" && localStorage) ? localStorage.getItem('theme') : 'dark';
+              div.classList.toggle('light-mode', currentTheme === 'light');
             } else {
               let starter = wordsMap.find(w => w.row === r && w.col === c && w.clueNumber);
               if (starter) {
                 let num = document.createElement("div");
                 num.className = "clue-number";
                 num.textContent = starter.clueNumber;
-                num.classList.toggle('light-mode', localStorage.getItem('theme') === 'light');
+                const currentTheme = (typeof(Storage) !== "undefined" && localStorage) ? localStorage.getItem('theme') : 'dark';
+                num.classList.toggle('light-mode', currentTheme === 'light');
                 div.appendChild(num);
               }
               if (playerGrid[r][c] !== "") {
@@ -2562,7 +2609,8 @@ function loadTrack(index) {
             let li = document.createElement("li");
             li.innerHTML = `${w.clueNumber}. ${w.clue}`;
             li.onclick = () => selectWord(w);
-            li.classList.toggle('light-mode', localStorage.getItem('theme') === 'light');
+            const currentTheme = (typeof(Storage) !== "undefined" && localStorage) ? localStorage.getItem('theme') : 'dark';
+            li.classList.toggle('light-mode', currentTheme === 'light');
             if (w.dir === "across") across.appendChild(li);
             else down.appendChild(li);
           });
@@ -2588,6 +2636,7 @@ function loadTrack(index) {
         if (cell) cell.classList.add("highlight");
       }
       focusCell();
+      focusMobileInput(); // Focus mobile input when word is selected
     }
 
     function focusCell() {
@@ -2599,6 +2648,80 @@ function loadTrack(index) {
       if (cell) cell.classList.add("active");
     }
 
+    // --- MOBILE INPUT FUNCTIONALITY ---
+    function focusMobileInput() {
+      // Focus the mobile input to bring up the keyboard
+      setTimeout(() => {
+        mobileInput.focus();
+      }, 100);
+    }
+
+    function handleMobileInput(char) {
+      if (!activeWord || gameOver) return;
+      
+      if (char && char.match(/^[a-zA-Z]$/)) {
+        let r = activeWord.row + (activeWord.dir === "down" ? activeCellIndex : 0);
+        let c = activeWord.col + (activeWord.dir === "across" ? activeCellIndex : 0);
+        playerGrid[r][c] = char.toLowerCase();
+        renderGrid();
+        checkWordCompletion(activeWord);
+        if (activeCellIndex < activeWord.word.length - 1) {
+          activeCellIndex++;
+          focusCell();
+        } else {
+          let nextWordIndex = wordsMap.findIndex(w => !w.solved);
+          if (nextWordIndex !== -1) {
+            selectWord(wordsMap[nextWordIndex]);
+          } else {
+            checkPuzzle();
+          }
+        }
+      }
+    }
+
+    function handleMobileBackspace() {
+      if (!activeWord || gameOver) return;
+      
+      let r = activeWord.row + (activeWord.dir === "down" ? activeCellIndex : 0);
+      let c = activeWord.col + (activeWord.dir === "across" ? activeCellIndex : 0);
+      if (playerGrid[r][c] === "" && activeCellIndex > 0) {
+        activeCellIndex--;
+        r = activeWord.row + (activeWord.dir === "down" ? activeCellIndex : 0);
+        c = activeWord.col + (activeWord.dir === "across" ? activeCellIndex : 0);
+      }
+      playerGrid[r][c] = "";
+      renderGrid();
+      focusCell();
+    }
+
+    // Mobile input event listeners
+    mobileInput.addEventListener('input', function(e) {
+      const char = e.target.value.slice(-1); // Get the last character typed
+      handleMobileInput(char);
+      // Clear the input to allow continuous typing
+      setTimeout(() => {
+        e.target.value = '';
+      }, 10);
+    });
+
+    mobileInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Backspace') {
+        e.preventDefault();
+        handleMobileBackspace();
+      }
+    });
+
+    // Prevent mobile input from losing focus when game area is tapped
+    gameAreaDiv.addEventListener('touchstart', function(e) {
+      if (activeWord && e.target.classList.contains('cell')) {
+        e.preventDefault(); // Prevent default touch behavior
+        setTimeout(() => {
+          mobileInput.focus();
+        }, 50);
+      }
+    });
+
+    // Desktop keyboard input (existing functionality)
     document.addEventListener("keydown", e => {
       if (!activeWord || gameOver) return;
       if (e.key.match(/^[a-zA-Z]$/)) {
@@ -2769,7 +2892,8 @@ function loadTrack(index) {
     // Initial setup
     document.addEventListener('DOMContentLoaded', () => {
       renderLeaderboard();
-      setTheme(localStorage.getItem('theme') === 'dark' ? 'dark' : 'light');
+      const currentTheme = (typeof(Storage) !== "undefined" && localStorage) ? localStorage.getItem('theme') : 'dark';
+      setTheme(currentTheme === 'dark' ? 'dark' : 'light');
     });
 	
 	// Track the last clicked crossword cell
