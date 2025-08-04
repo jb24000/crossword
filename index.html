@@ -136,14 +136,13 @@ body.light-mode .lobby-form label {
   background: #00cc6a;
 }
 
-/* Music Controls */
+/* Music Controls - Fixed positioning to not crowd settings */
 .music-controls {
   display: flex;
   gap: 6px;
-  margin-top: -6px; /* closer to Sound */
-  position: relative;
-  left: 48%;
-  transform: translateX(-40%); /* align under 'd' */
+  margin-top: 8px;
+  margin-bottom: 12px;
+  justify-content: center;
 }
 .music-controls button {
   font-family: 'Press Start 2P', cursive;
@@ -648,8 +647,9 @@ body.light-mode {
   }
   
   .music-controls {
-    left: 50%;
-    transform: translateX(-50%);
+    justify-content: center;
+    margin-top: 8px;
+    margin-bottom: 12px;
     gap: 6px;
   }
   
@@ -866,7 +866,7 @@ body.light-mode {
     width="0"
     height="0"
     frameborder="0"
-    allow="encrypted-media"
+    allow="autoplay; encrypted-media"
     src=""
   ></iframe>
    </div>
@@ -2080,25 +2080,25 @@ let currentTrackIndex = 0;
 
 // Load and start playing a track
 function loadTrack(index) {
+  if (!soundToggle.checked) return;
+  
   currentTrackIndex = (index + playlist.length) % playlist.length;
   const videoId = playlist[currentTrackIndex];
-  ytMusicIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=0&controls=0&muted=0&enablejsapi=1`;
+  ytMusicIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=0&controls=0&mute=0&enablejsapi=1&origin=${window.location.origin}`;
   musicStarted = true;
+  console.log(`Loading track ${currentTrackIndex + 1}: ${videoId}`);
 }
 
 // Handle Sound toggle 
 function handleMusic(on) {
   if (on) {
     // Start Track 1 immediately when sound is turned on
+    console.log('Sound turned ON - starting music...');
     loadTrack(0); // Always start with Track 1
   } else {
-    try {
-      ytMusicIframe.contentWindow.postMessage(
-        '{"event":"command","func":"pauseVideo","args":""}', '*'
-      );
-    } catch (e) {
-      console.log('Music pause failed:', e);
-    }
+    console.log('Sound turned OFF - stopping music...');
+    ytMusicIframe.src = "";
+    musicStarted = false;
   }
 }
 
