@@ -187,12 +187,12 @@ body.light-mode .lobby-form label {
 #crossword {
   display: grid;
   gap: 1px;
-  background: #000;
+  background: #333;
   margin: 20px auto;
   padding: 8px;
   border: 4px solid #FFD700;
   border-radius: 12px;
-  box-shadow: inset 4px 4px 0px #333, 4px 4px 0px #666;
+  box-shadow: inset 4px 4px 0px #555, 4px 4px 0px #666;
   justify-content: center;
   width: fit-content;
 }
@@ -363,89 +363,93 @@ body.light-mode .lobby-form label {
   font-weight: normal;
 }
 
-/* Light mode */
+/* Light mode - White and Grey */
 body.light-mode {
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  color: #222;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e2e8f0 100%);
+  color: #495057;
 }
 .container.light-mode, #game-area.light-mode {
-  background: rgba(255,255,255,0.7);
-  color: #222;
+  background: rgba(255,255,255,0.9);
+  color: #495057;
 }
-.settings-label.light-mode { color: #222; }
-.title.light-mode { color: #00b36b; text-shadow: 2px 2px 0px #fff; }
+.settings-label.light-mode { color: #495057; }
+.title.light-mode { color: #00ff88; text-shadow: 2px 2px 0px #fff; }
 .lobby-form input.light-mode, .lobby-form select.light-mode {
   background: #fff;
-  color: #222;
-  border: 1px solid #bbb;
+  color: #495057;
+  border: 1px solid #adb5bd;
 }
+.lobby-form label.light-mode { color: #495057; }
 #hud.light-mode {
-  color: #222;
-  border-color: #222;
-  background: rgba(0,0,0,0.1);
-  box-shadow: 2px 2px 0px #bbb;
+  color: #495057;
+  border-color: #495057;
+  background: rgba(255,255,255,0.8);
+  box-shadow: 2px 2px 0px #adb5bd;
 }
 #crossword.light-mode {
-  background: #ddd;
-  border-color: #222;
-  box-shadow: inset 4px 4px 0px #bbb, 4px 4px 0px #aaa;
+  background: #adb5bd;
+  border-color: #495057;
+  box-shadow: inset 4px 4px 0px #6c757d, 4px 4px 0px #dee2e6;
 }
 .cell.light-mode {
   background: #ffffff;
-  color: #000;
-  border-color: #999;
-  box-shadow: inset -1px -1px 0px #ccc, inset 1px 1px 0px #fff;
+  color: #495057;
+  border-color: #6c757d;
+  box-shadow: inset -2px -2px 0px #dee2e6, inset 2px 2px 0px #fff;
 }
 .black.light-mode {
-  background: #888 !important;
-  border-color: #666 !important;
-  box-shadow: inset -1px -1px 0px #666 !important;
+  background: #6c757d !important;
+  border-color: #495057 !important;
+  box-shadow: inset -2px -2px 0px #495057 !important;
 }
-.clue-number.light-mode { color: #666; }
+.clue-number.light-mode { color: #6c757d; }
 .highlight.light-mode {
   background: #FFD700 !important;
-  color: #222 !important;
+  color: #495057 !important;
 }
 .active.light-mode {
-  outline: 2px solid #00b36b;
+  outline: 3px solid #00ff88;
 }
 .clue-list.light-mode {
-  background: rgba(255,255,255,0.8);
-  border-color: #222;
-  box-shadow: 3px 3px 0px #bbb;
+  background: rgba(255,255,255,0.9);
+  border-color: #495057;
+  box-shadow: 3px 3px 0px #adb5bd;
 }
 .clue-list h3.light-mode {
-  color: #222;
-  border-color: #222;
+  color: #495057;
+  border-color: #495057;
 }
-.clue-list li.light-mode { color: #222; }
-.clue-list li.light-mode:hover { color: #00b36b; }
-.player-turn-display.light-mode { color: #00b36b; }
-.high-score-display.light-mode { color: #222; }
+.clue-list li.light-mode { color: #495057; }
+.clue-list li.light-mode:hover { color: #00ff88; }
+.player-turn-display.light-mode { color: #00ff88; }
+.high-score-display.light-mode { color: #495057; }
 .leaderboard-title.light-mode {
-  color: #222;
-  border-color: #222;
+  color: #495057;
+  border-color: #495057;
 }
-.tab.light-mode { color: #222; }
+.tab.light-mode { color: #495057; }
 .tab.active.light-mode {
   border-color: #FFD700;
   color: #FFD700;
   background: rgba(0,0,0,0.05);
 }
 .leaderboard li.light-mode {
-  color: #222;
+  color: #495057;
+}
+.toggles label.light-mode {
+  color: #495057;
 }
 
-/* Mobile responsive - match desktop colors exactly */
+/* Mobile responsive - Fixed contrast and colors */
 @media (max-width: 600px) {
   body {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* EXACT same as desktop */
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: #fff;
   }
   
   body.light-mode {
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-    color: #222;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e2e8f0 100%);
+    color: #495057;
   }
   
   .container { 
@@ -453,21 +457,21 @@ body.light-mode {
     padding: 18px 15px 12px 15px; 
     width: calc(100% - 20px);
     max-width: none;
-    background: rgba(0,0,0,0.4); /* EXACT same as desktop */
+    background: rgba(0,0,0,0.4);
   }
   
   .container.light-mode {
-    background: rgba(255,255,255,0.7); /* EXACT same as desktop */
-    color: #222;
+    background: rgba(255,255,255,0.9);
+    color: #495057;
   }
   
   .title { 
     font-size: 18px; 
-    color: #00ff88; /* EXACT same as desktop */
+    color: #00ff88;
   }
   
   .title.light-mode {
-    color: #00b36b; /* EXACT same as desktop */
+    color: #00ff88;
   }
   
   .toggles {
@@ -484,15 +488,15 @@ body.light-mode {
   }
   
   .toggles label.light-mode {
-    color: #222;
+    color: #495057;
   }
   
   .settings-label {
-    color: #FFD700; /* EXACT same as desktop */
+    color: #FFD700;
   }
   
   .settings-label.light-mode {
-    color: #222; /* EXACT same as desktop */
+    color: #495057;
   }
   
   #game-area { 
@@ -500,65 +504,65 @@ body.light-mode {
     padding: 15px; 
     width: calc(100% - 20px);
     max-width: none;
-    background: rgba(0,0,0,0.4); /* EXACT same as desktop */
+    background: rgba(0,0,0,0.4);
   }
   
   #game-area.light-mode {
-    background: rgba(255,255,255,0.7); /* EXACT same as desktop */
-    color: #222;
+    background: rgba(255,255,255,0.9);
+    color: #495057;
   }
   
   #crossword {
-    background: #000; /* EXACT same as desktop */
-    border: 4px solid #FFD700; /* EXACT same as desktop */
+    background: #333;
+    border: 4px solid #FFD700;
     margin: 15px auto;
     padding: 6px;
-    box-shadow: inset 4px 4px 0px #333, 4px 4px 0px #666; /* EXACT same as desktop */
+    box-shadow: inset 4px 4px 0px #555, 4px 4px 0px #666;
     gap: 1px;
   }
   
   #crossword.light-mode {
-    background: #ddd; /* EXACT same as desktop */
-    border: 4px solid #222; /* EXACT same as desktop */
-    box-shadow: inset 4px 4px 0px #bbb, 4px 4px 0px #aaa; /* EXACT same as desktop */
+    background: #adb5bd;
+    border: 4px solid #495057;
+    box-shadow: inset 4px 4px 0px #6c757d, 4px 4px 0px #dee2e6;
   }
   
   .cell { 
     width: 28px; 
     height: 28px; 
     font-size: 12px;
-    background: #ffffff; /* EXACT same as desktop */
-    color: #000; /* EXACT same as desktop */
-    border: 2px solid #333; /* EXACT same as desktop */
-    box-shadow: inset -2px -2px 0px #bbb, inset 2px 2px 0px #fff; /* EXACT same as desktop */
+    background: #ffffff;
+    color: #000;
+    border: 2px solid #333;
+    box-shadow: inset -2px -2px 0px #bbb, inset 2px 2px 0px #fff;
   }
   
   .cell.light-mode {
-    background: #fff; /* EXACT same as desktop */
-    color: #222; /* EXACT same as desktop */
-    border-color: #bbb; /* EXACT same as desktop */
-    box-shadow: inset -2px -2px 0px #ddd, inset 2px 2px 0px #eee; /* EXACT same as desktop */
+    background: #ffffff;
+    color: #495057;
+    border-color: #6c757d;
+    box-shadow: inset -2px -2px 0px #dee2e6, inset 2px 2px 0px #fff;
   }
   
   .black {
-    background: #111 !important; /* EXACT same as desktop */
-    border: 2px solid #000 !important; /* EXACT same as desktop */
-    box-shadow: inset -2px -2px 0px #000 !important; /* EXACT same as desktop */
+    background: #111 !important;
+    border: 2px solid #000 !important;
+    box-shadow: inset -2px -2px 0px #000 !important;
   }
   
   .black.light-mode {
-    background: #888 !important; /* EXACT same as desktop */
-    border: 2px solid #666 !important; /* EXACT same as desktop */
-    box-shadow: inset -2px -2px 0px #666 !important; /* EXACT same as desktop */
+    background: #6c757d !important;
+    border: 2px solid #495057 !important;
+    box-shadow: inset -2px -2px 0px #495057 !important;
   }
   
   .clue-number { 
     font-size: 6px; 
-    color: #444; /* EXACT same as desktop */
+    color: #444;
   }
   
   .clue-number.light-mode {
-    color: #888; /* EXACT same as desktop */
+    color: #6c757d;
   }
   
   .clues { 
@@ -567,44 +571,44 @@ body.light-mode {
   }
   
   .clue-list {
-    background: rgba(0,0,0,0.5); /* EXACT same as desktop */
-    border: 2px solid #FFD700; /* EXACT same as desktop */
-    box-shadow: 3px 3px 0px #000; /* EXACT same as desktop */
+    background: rgba(0,0,0,0.5);
+    border: 2px solid #FFD700;
+    box-shadow: 3px 3px 0px #000;
   }
   
   .clue-list.light-mode {
-    background: rgba(255,255,255,0.5); /* EXACT same as desktop */
-    border: 2px solid #222; /* EXACT same as desktop */
-    box-shadow: 3px 3px 0px #bbb; /* EXACT same as desktop */
+    background: rgba(255,255,255,0.9);
+    border: 2px solid #495057;
+    box-shadow: 3px 3px 0px #adb5bd;
   }
   
   .clue-list h3 {
-    color: #FFD700; /* EXACT same as desktop */
+    color: #FFD700;
     font-size: 11px;
-    border-bottom: 1px solid #FFD700; /* EXACT same as desktop */
+    border-bottom: 1px solid #FFD700;
   }
   
   .clue-list h3.light-mode {
-    color: #222; /* EXACT same as desktop */
-    border-bottom: 1px solid #222; /* EXACT same as desktop */
+    color: #495057;
+    border-bottom: 1px solid #495057;
   }
   
   .clue-list li {
-    color: #fff; /* EXACT same as desktop */
+    color: #fff;
     font-size: 9px;
     line-height: 1.5;
   }
   
   .clue-list li.light-mode {
-    color: #222; /* EXACT same as desktop */
+    color: #495057;
   }
   
   .clue-list li:hover {
-    color: #00ff88; /* EXACT same as desktop */
+    color: #00ff88;
   }
   
   .clue-list li.light-mode:hover {
-    color: #00b36b; /* EXACT same as desktop */
+    color: #00ff88;
   }
   
   .game-buttons { 
@@ -618,12 +622,12 @@ body.light-mode {
     font-size: 11px;
     flex: 1;
     min-width: 100px;
-    background: #00ff88; /* EXACT same as desktop */
-    color: #222; /* EXACT same as desktop */
+    background: #00ff88;
+    color: #222;
   }
   
   .game-buttons button:hover {
-    background: #00cc6a; /* EXACT same as desktop */
+    background: #00cc6a;
   }
   
   .mode-buttons { 
@@ -635,12 +639,12 @@ body.light-mode {
     flex: 1;
     min-width: 120px;
     font-size: 14px;
-    background: #00ff88; /* EXACT same as desktop */
-    color: #333; /* EXACT same as desktop */
+    background: #00ff88;
+    color: #333;
   }
   
   .mode-button:hover {
-    background: #00cc6a; /* EXACT same as desktop */
+    background: #00cc6a;
   }
   
   .music-controls {
@@ -652,87 +656,87 @@ body.light-mode {
   .music-controls button {
     font-size: 9px;
     padding: 6px 8px;
-    background: #00ff88; /* EXACT same as desktop */
-    color: #222; /* EXACT same as desktop */
+    background: #00ff88;
+    color: #222;
   }
   
   .music-controls button:hover {
-    background: #00cc6a; /* EXACT same as desktop */
+    background: #00cc6a;
   }
   
   #hud {
     font-size: 9px;
     padding: 6px 8px;
     word-break: break-word;
-    background: rgba(0,0,0,0.4); /* EXACT same as desktop */
-    color: #FFD700; /* EXACT same as desktop */
-    border: 2px solid #FFD700; /* EXACT same as desktop */
-    box-shadow: 2px 2px 0px #333; /* EXACT same as desktop */
+    background: rgba(0,0,0,0.4);
+    color: #FFD700;
+    border: 2px solid #FFD700;
+    box-shadow: 2px 2px 0px #333;
   }
   
   #hud.light-mode {
-    background: rgba(0,0,0,0.1); /* EXACT same as desktop */
-    color: #222; /* EXACT same as desktop */
-    border: 2px solid #222; /* EXACT same as desktop */
-    box-shadow: 2px 2px 0px #bbb; /* EXACT same as desktop */
+    background: rgba(255,255,255,0.8);
+    color: #495057;
+    border: 2px solid #495057;
+    box-shadow: 2px 2px 0px #adb5bd;
   }
   
   .player-turn-display {
     font-size: 14px;
-    color: #00ff88; /* EXACT same as desktop */
+    color: #00ff88;
   }
   
   .player-turn-display.light-mode {
-    color: #00b36b; /* EXACT same as desktop */
+    color: #00ff88;
   }
   
   .high-score-display {
     font-size: 11px;
-    color: #FFD700; /* EXACT same as desktop */
+    color: #FFD700;
   }
   
   .high-score-display.light-mode {
-    color: #222; /* EXACT same as desktop */
+    color: #495057;
   }
   
   .leaderboard-title {
     font-size: 12px;
-    color: #FFD700; /* EXACT same as desktop */
-    border-bottom: 2px solid #FFD700; /* EXACT same as desktop */
+    color: #FFD700;
+    border-bottom: 2px solid #FFD700;
   }
   
   .leaderboard-title.light-mode {
-    color: #222; /* EXACT same as desktop */
-    border-bottom: 2px solid #222; /* EXACT same as desktop */
+    color: #495057;
+    border-bottom: 2px solid #495057;
   }
   
   .tab {
     font-size: 10px;
     padding: 6px 8px;
-    color: #fff; /* EXACT same as desktop */
+    color: #fff;
   }
   
   .tab.light-mode {
-    color: #222; /* EXACT same as desktop */
+    color: #495057;
   }
   
   .tab.active {
-    color: #FFD700; /* EXACT same as desktop */
-    border-color: #FFD700; /* EXACT same as desktop */
+    color: #FFD700;
+    border-color: #FFD700;
   }
   
   .tab.active.light-mode {
-    color: #FFD700; /* EXACT same as desktop */
-    border-color: #FFD700; /* EXACT same as desktop */
+    color: #FFD700;
+    border-color: #FFD700;
   }
   
   .leaderboard li {
     font-size: 9px;
-    color: #fff; /* EXACT same as desktop */
+    color: #fff;
   }
   
   .leaderboard li.light-mode {
-    color: #222; /* EXACT same as desktop */
+    color: #495057;
   }
 }
 
