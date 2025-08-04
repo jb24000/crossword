@@ -866,7 +866,7 @@ body.light-mode {
     width="0"
     height="0"
     frameborder="0"
-    allow="autoplay; encrypted-media"
+    allow="encrypted-media"
     src=""
   ></iframe>
    </div>
@@ -909,13 +909,11 @@ body.light-mode {
   <div class="fade-black" id="fade-black"></div>
 
   <!-- Win/Lose Sounds -->
-  <audio id="win-sound" preload="auto">
-    <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav">
-  </audio>
-  <audio id="lose-sound" preload="auto">
-    <source src="https://www.soundjay.com/misc/sounds/fail-buzzer-02.wav" type="audio/wav">
-  </audio>
+  <audio id="win-sound" src="win.mp3" preload="auto"></audio>
+  <audio id="lose-sound" src="lose.mp3" preload="auto"></audio>
   
+ 
+
   <script>
     // --- Word Banks (from your Hangman game) ---
     const wordBanks = {
@@ -2084,9 +2082,8 @@ let currentTrackIndex = 0;
 function loadTrack(index) {
   currentTrackIndex = (index + playlist.length) % playlist.length;
   const videoId = playlist[currentTrackIndex];
-  ytMusicIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=0&controls=0&mute=0&enablejsapi=1`;
+  ytMusicIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=0&controls=0&muted=0&enablejsapi=1`;
   musicStarted = true;
-  console.log(`Loading track ${currentTrackIndex + 1}: ${videoId}`);
 }
 
 // Handle Sound toggle 
@@ -2094,92 +2091,37 @@ function handleMusic(on) {
   if (on) {
     // Start Track 1 immediately when sound is turned on
     loadTrack(0); // Always start with Track 1
-    console.log('Sound turned ON - starting music...');
   } else {
-    ytMusicIframe.src = "";
-    musicStarted = false;
-    console.log('Sound turned OFF - stopping music...');
-  }
-}
-
-// Manual Next / Prev buttons
-document.getElementById("next-track").addEventListener("click", () => {
-  if (soundToggle.checked) {
-    loadTrack(currentTrackIndex + 1);
-  }
-});
-document.getElementById("prev-track").addEventListener("click", () => {
-  if (soundToggle.checked) {
-    loadTrack(currentTrackIndex - 1);
-  }
-});
-
-// Auto-advance to next track when current track ends
-window.addEventListener("message", function (event) {
-  if (event.data && typeof event.data === "string" && event.data.includes('"infoDelivery"')) {
     try {
-      const data = JSON.parse(event.data);
-      if (data.event === "infoDelivery" && data.info && data.info.playerState === 0 && soundToggle.checked) {
-        // PlayerState === 0 => track ended, play next track
-        loadTrack(currentTrackIndex + 1);
-      }
+      ytMusicIframe.contentWindow.postMessage(
+        '{"event":"command","func":"pauseVideo","args":""}', '*'
+      );
     } catch (e) {
-      console.log("Player message parse error:", e);
+      console.log('Music pause failed:', e);
     }
   }
-});
+}
 
 // --- Sound Effects ---
 function playWinSound() {
   if (soundToggle.checked) {
-    // Create synthetic win sound
-    try {
-      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
-      
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
-      
-      oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
-      oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
-      oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
-      
-      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-      
-      oscillator.start(audioContext.currentTime);
-      oscillator.stop(audioContext.currentTime + 0.5);
-    } catch (e) {
-      console.log('Win sound failed:', e);
-    }
+    winSound.currentTime = 0;
+    winSound.play();
+  }
+}
+function playLoseSound() {
+  if (soundToggle.checked) {
+    loseSound.currentTime = 0;
+    loseSound.play();
   }
 }
 
-function playLoseSound() {
-  if (soundToggle.checked) {
-    // Create synthetic lose sound
-    try {
-      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
-      
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
-      
-      oscillator.frequency.setValueAtTime(220, audioContext.currentTime); // A3
-      oscillator.frequency.setValueAtTime(196, audioContext.currentTime + 0.2); // G3
-      oscillator.frequency.setValueAtTime(174.61, audioContext.currentTime + 0.4); // F3
-      
-      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.6);
-      
-      oscillator.start(audioContext.currentTime);
-      oscillator.stop(audioContext.currentTime + 0.6);
-    } catch (e) {
-      console.log('Lose sound failed:', e);
-    }
-  }
+// Load and start playing a track
+function loadTrack(index) {
+  currentTrackIndex = (index + playlist.length) % playlist.length;
+  const videoId = playlist[currentTrackIndex];
+  ytMusicIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=0&controls=0&muted=0&enablejsapi=1`;
+  musicStarted = true;
 }
 
     // --- Lobby Mode Selection Logic ---
