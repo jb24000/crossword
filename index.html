@@ -387,22 +387,22 @@ body.light-mode {
   box-shadow: 2px 2px 0px #bbb;
 }
 #crossword.light-mode {
-  background: #eee;
+  background: #f0f0f0;
   border-color: #222;
-  box-shadow: inset 4px 4px 0px #bbb, 4px 4px 0px #aaa;
+  box-shadow: inset 4px 4px 0px #ddd, 4px 4px 0px #aaa;
 }
 .cell.light-mode {
-  background: #fff;
-  color: #222;
-  border-color: #bbb;
-  box-shadow: inset -2px -2px 0px #ddd, inset 2px 2px 0px #eee;
+  background: #ffffff;
+  color: #000;
+  border-color: #999;
+  box-shadow: inset -1px -1px 0px #ccc, inset 1px 1px 0px #fff;
 }
 .black.light-mode {
-  background: #ccc;
-  border-color: #aaa;
-  box-shadow: inset -2px -2px 0px #aaa;
+  background: #333333 !important;
+  border-color: #222 !important;
+  box-shadow: inset -1px -1px 0px #222 !important;
 }
-.clue-number.light-mode { color: #888; }
+.clue-number.light-mode { color: #666; }
 .highlight.light-mode {
   background: #FFD700 !important;
   color: #222 !important;
@@ -411,7 +411,7 @@ body.light-mode {
   outline: 2px solid #00b36b;
 }
 .clue-list.light-mode {
-  background: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.8);
   border-color: #222;
   box-shadow: 3px 3px 0px #bbb;
 }
@@ -2105,41 +2105,19 @@ const playlist = [
 ];
 let currentTrackIndex = 0;
 
-// Load and play a track (no autoplay)
+// Load and start playing a track
 function loadTrack(index) {
   currentTrackIndex = (index + playlist.length) % playlist.length;
   const videoId = playlist[currentTrackIndex];
-  ytMusicIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=0&loop=0&controls=0&muted=0&enablejsapi=1`;
+  ytMusicIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=0&controls=0&muted=0&enablejsapi=1`;
   musicStarted = true;
-  
-  // Only start playing if sound is enabled
-  if (soundToggle.checked) {
-    setTimeout(() => {
-      try {
-        ytMusicIframe.contentWindow.postMessage(
-          '{"event":"command","func":"playVideo","args":""}', '*'
-        );
-      } catch (e) {
-        console.log('Music play failed:', e);
-      }
-    }, 1000);
-  }
 }
 
 // Handle Sound toggle 
 function handleMusic(on) {
   if (on) {
-    if (!musicStarted) {
-      loadTrack(currentTrackIndex); // start first track
-    } else {
-      try {
-        ytMusicIframe.contentWindow.postMessage(
-          '{"event":"command","func":"playVideo","args":""}', '*'
-        );
-      } catch (e) {
-        console.log('Music play failed:', e);
-      }
-    }
+    // Start Track 1 immediately when sound is turned on
+    loadTrack(0); // Always start with Track 1
   } else {
     try {
       ytMusicIframe.contentWindow.postMessage(
@@ -2153,10 +2131,14 @@ function handleMusic(on) {
 
 // Manual Next / Prev buttons
 document.getElementById("next-track").addEventListener("click", () => {
-  loadTrack(currentTrackIndex + 1);
+  if (soundToggle.checked) {
+    loadTrack(currentTrackIndex + 1);
+  }
 });
 document.getElementById("prev-track").addEventListener("click", () => {
-  loadTrack(currentTrackIndex - 1);
+  if (soundToggle.checked) {
+    loadTrack(currentTrackIndex - 1);
+  }
 });
 
 // Auto-advance to next track when current track ends
@@ -2164,7 +2146,7 @@ window.addEventListener("message", function (event) {
   if (event.data && typeof event.data === "string" && event.data.includes('"infoDelivery"')) {
     try {
       const data = JSON.parse(event.data);
-      if (data.event === "infoDelivery" && data.info && data.info.playerState === 0) {
+      if (data.event === "infoDelivery" && data.info && data.info.playerState === 0 && soundToggle.checked) {
         // PlayerState === 0 => track ended, play next track
         loadTrack(currentTrackIndex + 1);
       }
@@ -2188,25 +2170,12 @@ function playLoseSound() {
   }
 }
 
-// Updated loadTrack to not use deprecated function
+// Load and start playing a track
 function loadTrack(index) {
   currentTrackIndex = (index + playlist.length) % playlist.length;
   const videoId = playlist[currentTrackIndex];
-  ytMusicIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=0&loop=0&controls=0&muted=0&enablejsapi=1`;
+  ytMusicIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=0&controls=0&muted=0&enablejsapi=1`;
   musicStarted = true;
-
-  // Only start playing if sound is enabled
-  if (soundToggle.checked) {
-    setTimeout(() => {
-      try {
-        ytMusicIframe.contentWindow.postMessage(
-          '{"event":"command","func":"playVideo","args":""}', '*'
-        );
-      } catch (e) {
-        console.log("Music play failed:", e);
-      }
-    }, 1000);
-  }
 }
 
 
