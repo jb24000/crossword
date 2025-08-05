@@ -69,7 +69,7 @@
     .leaderboard ul { list-style: none; padding: 0; margin: 0; }
     .leaderboard li { margin: 5px 0; font-size: 12px; color: #fff; font-weight: normal; }
     #mobile-input { position: absolute; top: -9999px; left: -9999px; opacity: 0; z-index: -1; font-size: 16px; width: 1px; height: 1px; border: none; background: transparent; color: transparent; outline: none; resize: none; }
-    .keyboard { display: none; }
+    .keyboard { display: flex; flex-direction: column; align-items: center; margin: 10px auto; user-select: none; }
     .keyboard-row { display: flex; justify-content: center; margin: 4px 0; }
     .keyboard-row button { width: 32px; height: 32px; margin: 2px; border: 2px solid #FFD700; background: #333; color: #00ff88; font-family: monospace, 'Courier New', Courier; font-size: 14px; cursor: pointer; border-radius: 4px; font-weight: bold; }
     .keyboard-row button:hover { background: #555; }
@@ -580,7 +580,9 @@ document.addEventListener('DOMContentLoaded', () => {
     timeLeft = currentPuzzleTotalWords * 30;
     updateHUD();
     startTimer();
-    // Professional games use native keyboard input
+    if (isMobile()) {
+      toggleKeyboard(true);
+    }
   }
 
   function updateHUD() {
@@ -677,7 +679,9 @@ document.addEventListener('DOMContentLoaded', () => {
     lobbyDiv.classList.remove('hidden');
     gameAreaDiv.style.display = 'none';
     renderLeaderboard();
-    // Professional mobile experience - no virtual keyboard management needed
+    if (isMobile()) {
+      toggleKeyboard(false);
+    }
   };
 
   // --- Crossword Game Logic ---
@@ -1513,7 +1517,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function focusMobileInput() {
-    setTimeout(() => { mobileInput.focus(); }, 100);
+    // Don't focus mobile input on mobile devices - use virtual keyboard instead
+    if (!isMobile()) {
+      setTimeout(() => { mobileInput.focus(); }, 100);
+    }
   }
 
   function handleMobileInput(char) {
@@ -1569,9 +1576,9 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   gameAreaDiv.addEventListener('touchstart', function(e) {
+    // Don't focus mobile input to prevent keyboard popup - virtual keyboard handles input
     if (activeWord && e.target.classList.contains('cell')) {
       e.preventDefault();
-      setTimeout(() => { mobileInput.focus(); }, 50);
     }
   });
 
@@ -1713,16 +1720,34 @@ document.addEventListener('DOMContentLoaded', () => {
     checkWordCompletion(wordToHint);
   };
 
-  // --- Virtual Keyboard Logic - REMOVED FOR PROFESSIONAL EXPERIENCE ---
+  // --- Virtual Keyboard Logic - Restored for Mobile ---
   function isMobile() {
     return /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
   }
   
   function toggleKeyboard(show) {
-    // No virtual keyboard - use native mobile keyboard experience
+    if (isMobile() && virtualKeyboard) {
+      virtualKeyboard.style.display = show ? 'flex' : 'none';
+    }
   }
   
-  // Remove all virtual keyboard functionality - use native mobile input
+  if (isMobile()) {
+    virtualKeyboard.style.display = 'none'; // Hidden until game starts
+    virtualKeyboard.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        let letter = btn.textContent;
+        if (letter === "⌫") {
+          handleBackspace();
+        } else {
+          handleLetterInput(letter);
+        }
+      });
+    });
+  } else {
+    virtualKeyboard.style.display = 'none';
+  }
 
   // --- FIXED: Sound Effects ---
   function playWinSound() {
