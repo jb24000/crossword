@@ -69,11 +69,67 @@
     .leaderboard ul { list-style: none; padding: 0; margin: 0; }
     .leaderboard li { margin: 5px 0; font-size: 12px; color: #fff; font-weight: normal; }
     #mobile-input { position: absolute; top: -9999px; left: -9999px; opacity: 0; z-index: -1; font-size: 16px; width: 1px; height: 1px; border: none; background: transparent; color: transparent; outline: none; resize: none; }
-    .keyboard { display: flex; flex-direction: column; align-items: center; margin: 10px auto; user-select: none; }
-    .keyboard-row { display: flex; justify-content: center; margin: 4px 0; }
-    .keyboard-row button { width: 32px; height: 32px; margin: 2px; border: 2px solid #FFD700; background: #333; color: #00ff88; font-family: monospace, 'Courier New', Courier; font-size: 14px; cursor: pointer; border-radius: 4px; font-weight: bold; }
-    .keyboard-row button:hover { background: #555; }
-    .keyboard-row button:active { background: #00ff88; color: #333; }
+    
+    /* FIXED: Virtual Keyboard Styles */
+    .keyboard { 
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      background: rgba(0,0,0,0.9);
+      padding: 15px 10px 10px 10px;
+      user-select: none; 
+      z-index: 1000;
+      border-top: 3px solid #FFD700;
+      box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+    }
+    .keyboard-row { 
+      display: flex; 
+      justify-content: center; 
+      margin: 3px 0; 
+      gap: 4px;
+    }
+    .keyboard-row button { 
+      width: 36px; 
+      height: 36px; 
+      border: 2px solid #FFD700; 
+      background: #333; 
+      color: #00ff88; 
+      font-family: monospace, 'Courier New', Courier; 
+      font-size: 16px; 
+      cursor: pointer; 
+      border-radius: 6px; 
+      font-weight: bold; 
+      transition: all 0.15s ease;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .keyboard-row button:hover { 
+      background: #555; 
+      transform: translateY(-1px);
+    }
+    .keyboard-row button:active { 
+      background: #00ff88; 
+      color: #333; 
+      transform: translateY(1px);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+    }
+    .keyboard-row button#delete {
+      width: 50px;
+      font-size: 18px;
+      background: #cc3333;
+      border-color: #ff6666;
+    }
+    .keyboard-row button#delete:hover {
+      background: #dd4444;
+    }
+    .keyboard-row button#delete:active {
+      background: #ff6666;
+      color: #fff;
+    }
 
     /* Light mode styles */
     body.light-mode { background: linear-gradient(135deg, #f8f9fa 0%, #e2e8f0 100%); color: #495057; }
@@ -102,9 +158,30 @@
     .toggles label.light-mode { color: #495057; }
     
     /* Light mode keyboard */
-    .keyboard-row button.light-mode { border-color: #495057; background: #fff; color: #495057; }
-    .keyboard-row button.light-mode:hover { background: #f8f9fa; }
-    .keyboard-row button.light-mode:active { background: #495057; color: #fff; }
+    .keyboard.light-mode { 
+      background: rgba(255,255,255,0.95); 
+      border-color: #495057; 
+    }
+    .keyboard-row button.light-mode { 
+      border-color: #495057; 
+      background: #fff; 
+      color: #495057; 
+    }
+    .keyboard-row button.light-mode:hover { 
+      background: #f8f9fa; 
+    }
+    .keyboard-row button.light-mode:active { 
+      background: #495057; 
+      color: #fff; 
+    }
+    .keyboard-row button#delete.light-mode {
+      background: #dc3545;
+      border-color: #dc3545;
+      color: #fff;
+    }
+    .keyboard-row button#delete.light-mode:hover {
+      background: #c82333;
+    }
 
     /* Mobile responsive */
     @media (max-width: 600px) {
@@ -128,7 +205,7 @@
       
       #game-area { 
         margin: 10px; 
-        padding: 15px; 
+        padding: 15px 15px 120px 15px; /* Added bottom padding for keyboard */
         width: calc(100% - 20px); 
         max-width: none; 
       }
@@ -142,6 +219,17 @@
       #hud { font-size: 9px; padding: 6px 8px; word-break: break-word; }
       .player-turn-display { font-size: 14px; }
       .high-score-display { font-size: 11px; }
+      
+      /* Mobile keyboard adjustments */
+      .keyboard-row button { 
+        width: 32px; 
+        height: 32px; 
+        font-size: 14px; 
+      }
+      .keyboard-row button#delete {
+        width: 45px;
+        font-size: 16px;
+      }
     }
   </style>
 </head>
@@ -230,21 +318,18 @@
 <div class="fade-black" id="fade-black"></div>
 <audio id="win-sound" src="win.mp3" preload="auto"></audio>
 <audio id="lose-sound" src="lose.mp3" preload="auto"></audio>
+
+<!-- FIXED: Virtual Keyboard with improved positioning -->
 <div id="virtual-keyboard" class="keyboard hidden">
   <div class="keyboard-row">
-    <button>A</button><button>B</button><button>C</button><button>D</button>
-    <button>E</button><button>F</button><button>G</button><button>H</button>
-    <button>I</button>
+    <button data-key="Q">Q</button><button data-key="W">W</button><button data-key="E">E</button><button data-key="R">R</button><button data-key="T">T</button><button data-key="Y">Y</button><button data-key="U">U</button><button data-key="I">I</button><button data-key="O">O</button><button data-key="P">P</button>
   </div>
   <div class="keyboard-row">
-    <button>J</button><button>K</button><button>L</button><button>M</button>
-    <button>N</button><button>O</button><button>P</button><button>Q</button>
-    <button>R</button>
+    <button data-key="A">A</button><button data-key="S">S</button><button data-key="D">D</button><button data-key="F">F</button><button data-key="G">G</button><button data-key="H">H</button><button data-key="J">J</button><button data-key="K">K</button><button data-key="L">L</button>
   </div>
   <div class="keyboard-row">
-    <button>S</button><button>T</button><button>U</button><button>V</button>
-    <button>W</button><button>X</button><button>Y</button><button>Z</button>
-    <button id="delete">⌫</button>
+    <button data-key="Z">Z</button><button data-key="X">X</button><button data-key="C">C</button><button data-key="V">V</button><button data-key="B">B</button><button data-key="N">N</button><button data-key="M">M</button>
+    <button id="delete" data-key="Backspace">⌫</button>
   </div>
 </div>
 
@@ -459,6 +544,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.toggle('light-mode', mode === 'light');
     lobbyDiv.classList.toggle('light-mode', mode === 'light');
     gameAreaDiv.classList.toggle('light-mode', mode === 'light');
+    virtualKeyboard.classList.toggle('light-mode', mode === 'light');
     document.getElementById('settings-label').classList.toggle('light-mode', mode === 'light');
     document.getElementById('title').classList.toggle('light-mode', mode === 'light');
     document.querySelectorAll('.lobby-form input, .lobby-form select').forEach(el => {
@@ -580,8 +666,10 @@ document.addEventListener('DOMContentLoaded', () => {
     timeLeft = currentPuzzleTotalWords * 30;
     updateHUD();
     startTimer();
+    
+    // FIXED: Show keyboard properly on mobile
     if (isMobile()) {
-      toggleKeyboard(true);
+      showVirtualKeyboard(true);
     }
   }
 
@@ -679,8 +767,10 @@ document.addEventListener('DOMContentLoaded', () => {
     lobbyDiv.classList.remove('hidden');
     gameAreaDiv.style.display = 'none';
     renderLeaderboard();
+    
+    // FIXED: Hide keyboard when going back to lobby
     if (isMobile()) {
-      toggleKeyboard(false);
+      showVirtualKeyboard(false);
     }
   };
 
@@ -1287,65 +1377,7 @@ document.addEventListener('DOMContentLoaded', () => {
       portal: 'Doorway or entrance',
       archer: 'Person who shoots arrows',
       butter: 'Yellow dairy spread',
-      clover: 'Three-leaf plant',
-      eleven: 'One more than ten',
-      hammer: 'Tool for hitting nails',
-      ladder: 'Climbing tool with rungs',
-      monkey: 'Tree-climbing animal, likes bananas',
-      orange: 'Round citrus fruit, also a color',
-      pencil: 'Writing tool with graphite core',
-      school: 'Place for learning and education',
-      turtle: 'Slow reptile with a shell',
-      uncle: 'Your parent\'s brother',
-      valley: 'Low land between hills',
-      window: 'Glass opening in a wall',
-      yellow: 'Color of bananas or the sun',
-      zebra: 'Striped African animal, like a horse',
-      answer: 'Solution to a question',
-      branch: 'Part of a tree that grows leaves',
-      cloudy: 'Sky covered with clouds',
-      donkey: 'Animal like a small horse',
-      enough: 'Sufficient, as much as needed',
-      flower: 'Colorful plant part, often fragrant',
-      ground: 'Earth\'s surface, what you walk on',
-      hungry: 'Needing or wanting food',
-      inside: 'Located within something else',
-      jungle: 'Dense forest, tropical area',
-      kitten: 'Young cat',
-      letter: 'Written symbol or mailed message',
-      middle: 'Center, not beginning or end',
-      nephew: 'Your sibling\'s son',
-      pickle: 'Cucumber preserved in vinegar',
-      ribbon: 'Long, narrow strip of fabric',
-      simple: 'Easy, not complicated',
-      things: 'Objects, items, or stuff',
-      upward: 'Moving or pointing toward the top',
-      violet: 'Purple-blue color or a flower',
-      waffle: 'Breakfast food with square pattern',
-      yogurt: 'Creamy dairy food, often flavored',
-      zipper: 'Fastener with interlocking teeth',
-      always: 'At all times, without exception',
-      banana: 'Long yellow fruit, monkeys like',
-      candle: 'Wax stick for light when burning',
-      doctor: 'Medical professional, treats illness',
-      engine: 'Machine that powers vehicles',
-      finger: 'One of five on each hand',
-      handle: 'Part used to hold or carry',
-      kindly: 'In a friendly, gentle way',
-      listen: 'Pay attention to sound',
-      market: 'Place to buy and sell goods',
-      nature: 'The outdoors, plants and animals',
-      office: 'Workplace, often with desks',
-      person: 'A human being',
-      quarter: 'One fourth, or 25 cents',
-      reason: 'Explanation or cause for something',
-      summer: 'Warmest season of the year',
-      turkey: 'Large bird, eaten at Thanksgiving',
-      united: 'Joined together as one',
-      violin: 'String instrument played with bow',
-      winter: 'Coldest season of the year',
-      yearly: 'Happening once every year',
-      zombie: 'Fictional undead creature'
+      clover: 'Three-leaf plant'
     },
     hard: {
       champion: 'Winner of a contest or competition',
@@ -1523,40 +1555,61 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // FIXED: Improved letter input handling
+  function handleLetterInput(letter) {
+    if (!activeWord || gameOver) return;
+    if (activeCellIndex >= activeWord.word.length) return;
+    
+    let row = activeWord.row + (activeWord.dir === "down" ? activeCellIndex : 0);
+    let col = activeWord.col + (activeWord.dir === "across" ? activeCellIndex : 0);
+    
+    playerGrid[row][col] = letter.toLowerCase();
+    renderGrid();
+    checkWordCompletion(activeWord);
+    
+    // Move to next empty cell in the same word
+    if (activeCellIndex < activeWord.word.length - 1) {
+      activeCellIndex++;
+      focusCell();
+    } else {
+      // Word is complete, move to next unsolved word
+      let nextWordIndex = wordsMap.findIndex(w => !w.solved);
+      if (nextWordIndex !== -1) {
+        selectWord(wordsMap[nextWordIndex]);
+      }
+    }
+  }
+
+  // FIXED: Improved backspace handling
+  function handleBackspace() {
+    if (!activeWord || gameOver) return;
+    
+    let row = activeWord.row + (activeWord.dir === "down" ? activeCellIndex : 0);
+    let col = activeWord.col + (activeWord.dir === "across" ? activeCellIndex : 0);
+    
+    // If current cell is empty, move back and clear that cell
+    if (playerGrid[row][col] === "" && activeCellIndex > 0) {
+      activeCellIndex--;
+      row = activeWord.row + (activeWord.dir === "down" ? activeCellIndex : 0);
+      col = activeWord.col + (activeWord.dir === "across" ? activeCellIndex : 0);
+    }
+    
+    playerGrid[row][col] = "";
+    renderGrid();
+    focusCell();
+  }
+
+  // FIXED: Mobile input handling
   function handleMobileInput(char) {
     if (!activeWord || gameOver) return;
     if (char && char.match(/^[a-zA-Z]$/)) {
-      let r = activeWord.row + (activeWord.dir === "down" ? activeCellIndex : 0);
-      let c = activeWord.col + (activeWord.dir === "across" ? activeCellIndex : 0);
-      playerGrid[r][c] = char.toLowerCase();
-      renderGrid();
-      checkWordCompletion(activeWord);
-      if (activeCellIndex < activeWord.word.length - 1) {
-        activeCellIndex++;
-        focusCell();
-      } else {
-        let nextWordIndex = wordsMap.findIndex(w => !w.solved);
-        if (nextWordIndex !== -1) {
-          selectWord(wordsMap[nextWordIndex]);
-        } else {
-          checkPuzzle();
-        }
-      }
+      handleLetterInput(char);
     }
   }
 
   function handleMobileBackspace() {
     if (!activeWord || gameOver) return;
-    let r = activeWord.row + (activeWord.dir === "down" ? activeCellIndex : 0);
-    let c = activeWord.col + (activeWord.dir === "across" ? activeCellIndex : 0);
-    if (playerGrid[r][c] === "" && activeCellIndex > 0) {
-      activeCellIndex--;
-      r = activeWord.row + (activeWord.dir === "down" ? activeCellIndex : 0);
-      c = activeWord.col + (activeWord.dir === "across" ? activeCellIndex : 0);
-    }
-    playerGrid[r][c] = "";
-    renderGrid();
-    focusCell();
+    handleBackspace();
   }
 
   mobileInput.addEventListener('input', function(e) {
@@ -1582,31 +1635,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  function handleLetterInput(letter) {
-    if (!activeWord || gameOver) return;
-    if (activeCellIndex >= activeWord.word.length) return;
-    let row = activeWord.row + (activeWord.dir === "down" ? activeCellIndex : 0);
-    let col = activeWord.col + (activeWord.dir === "across" ? activeCellIndex : 0);
-    playerGrid[row][col] = letter.toLowerCase();
-    renderGrid();
-    checkWordCompletion(activeWord);
-    if (activeCellIndex < activeWord.word.length - 1) {
-      activeCellIndex++;
-      focusCell();
-    }
-  }
-
-  function handleBackspace() {
-    if (!activeWord || gameOver) return;
-    if (activeCellIndex <= 0) return;
-    activeCellIndex--;
-    let row = activeWord.row + (activeWord.dir === "down" ? activeCellIndex : 0);
-    let col = activeWord.col + (activeWord.dir === "across" ? activeCellIndex : 0);
-    playerGrid[row][col] = "";
-    renderGrid();
-    focusCell();
-  }
-
+  // FIXED: Physical keyboard handling
   document.addEventListener('keydown', (e) => {
     if (gameOver || !activeWord) return;
     e.preventDefault(); // Prevent default to avoid duplicate input
@@ -1720,36 +1749,69 @@ document.addEventListener('DOMContentLoaded', () => {
     checkWordCompletion(wordToHint);
   };
 
-  // --- Virtual Keyboard Logic - Restored for Mobile ---
+  // --- FIXED: Virtual Keyboard Logic ---
   function isMobile() {
-    return /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+    return /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) || window.innerWidth <= 768;
   }
   
-  function toggleKeyboard(show) {
-    if (isMobile() && virtualKeyboard) {
-      virtualKeyboard.style.display = show ? 'flex' : 'none';
+  function showVirtualKeyboard(show) {
+    if (virtualKeyboard) {
+      if (show && isMobile()) {
+        virtualKeyboard.classList.remove('hidden');
+        virtualKeyboard.style.display = 'flex';
+        // Apply current theme
+        const currentTheme = (typeof(Storage) !== "undefined" && localStorage) ? localStorage.getItem('theme') : 'dark';
+        virtualKeyboard.classList.toggle('light-mode', currentTheme === 'light');
+      } else {
+        virtualKeyboard.classList.add('hidden');
+        virtualKeyboard.style.display = 'none';
+      }
     }
   }
   
-  if (isMobile()) {
-    virtualKeyboard.style.display = 'none'; // Hidden until game starts
+  // FIXED: Virtual keyboard event listeners with proper data attributes
+  if (virtualKeyboard) {
     virtualKeyboard.querySelectorAll('button').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        let letter = btn.textContent;
-        if (letter === "⌫") {
+        
+        const key = btn.dataset.key || btn.textContent;
+        
+        if (key === "Backspace" || btn.id === "delete") {
           handleBackspace();
-        } else {
-          handleLetterInput(letter);
+        } else if (key && key.match(/^[A-Z]$/)) {
+          handleLetterInput(key);
         }
+        
+        // Visual feedback
+        btn.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+          btn.style.transform = '';
+        }, 100);
+      });
+      
+      // Prevent context menu on long press
+      btn.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+      });
+      
+      // Touch feedback
+      btn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        btn.style.transform = 'scale(0.95)';
+      });
+      
+      btn.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        setTimeout(() => {
+          btn.style.transform = '';
+        }, 100);
       });
     });
-  } else {
-    virtualKeyboard.style.display = 'none';
   }
 
-  // --- FIXED: Sound Effects ---
+  // FIXED: Sound Effects ---
   function playWinSound() {
     if (!soundToggle.checked) return;
     
@@ -1808,9 +1870,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const currentTheme = (typeof(Storage) !== "undefined" && localStorage) ? localStorage.getItem('theme') : 'dark';
   setTheme(currentTheme === 'dark' ? 'dark' : 'light');
   
+  // Hide keyboard initially
+  showVirtualKeyboard(false);
+  
   console.log('🎮 NES Crossword Game initialized!');
   console.log('Sound enabled:', soundToggle.checked);
   console.log('Dark mode:', darkToggle.checked);
+  console.log('Mobile device:', isMobile());
 });
 </script>
 </body>
