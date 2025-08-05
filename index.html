@@ -1501,7 +1501,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function focusMobileInput() {
-    setTimeout(() => { mobileInput.focus(); }, 100);
+    // Don't focus mobile input to prevent keyboard popup on cell touch
   }
 
   function handleMobileInput(char) {
@@ -1557,10 +1557,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   gameAreaDiv.addEventListener('touchstart', function(e) {
-    if (activeWord && e.target.classList.contains('cell')) {
-      e.preventDefault();
-      setTimeout(() => { mobileInput.focus(); }, 50);
-    }
+    // Remove mobile input focus to prevent keyboard popup
+    e.preventDefault();
   });
 
   function handleLetterInput(letter) {
