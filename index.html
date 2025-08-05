@@ -85,6 +85,50 @@
       z-index: 1000;
       border-top: 3px solid #FFD700;
       box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+      transition: transform 0.3s ease;
+    }
+    .keyboard.docked {
+      transform: translateY(80%);
+    }
+    .keyboard-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 0 10px;
+    }
+    .keyboard-title {
+      color: #FFD700;
+      font-size: 14px;
+      font-weight: bold;
+      margin: 0;
+    }
+    .keyboard-controls {
+      display: flex;
+      gap: 10px;
+    }
+    .keyboard-control-btn {
+      width: 32px;
+      height: 32px;
+      border: 2px solid #FFD700;
+      background: #333;
+      color: #FFD700;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+    .keyboard-control-btn:hover {
+      background: #555;
+    }
+    .keyboard-control-btn:active {
+      background: #FFD700;
+      color: #333;
     }
     .keyboard-row { 
       display: flex; 
@@ -161,6 +205,21 @@
     .keyboard.light-mode { 
       background: rgba(255,255,255,0.95); 
       border-color: #495057; 
+    }
+    .keyboard-title.light-mode {
+      color: #495057;
+    }
+    .keyboard-control-btn.light-mode {
+      border-color: #495057;
+      background: #fff;
+      color: #495057;
+    }
+    .keyboard-control-btn.light-mode:hover {
+      background: #f8f9fa;
+    }
+    .keyboard-control-btn.light-mode:active {
+      background: #495057;
+      color: #fff;
     }
     .keyboard-row button.light-mode { 
       border-color: #495057; 
@@ -319,8 +378,15 @@
 <audio id="win-sound" src="win.mp3" preload="auto"></audio>
 <audio id="lose-sound" src="lose.mp3" preload="auto"></audio>
 
-<!-- FIXED: Virtual Keyboard with improved positioning -->
+<!-- FIXED: Virtual Keyboard with close and dock controls -->
 <div id="virtual-keyboard" class="keyboard hidden">
+  <div class="keyboard-header">
+    <div class="keyboard-title">Virtual Keyboard</div>
+    <div class="keyboard-controls">
+      <button class="keyboard-control-btn" id="dock-keyboard" title="Dock/Undock">⇅</button>
+      <button class="keyboard-control-btn" id="close-keyboard" title="Close">✕</button>
+    </div>
+  </div>
   <div class="keyboard-row">
     <button data-key="Q">Q</button><button data-key="W">W</button><button data-key="E">E</button><button data-key="R">R</button><button data-key="T">T</button><button data-key="Y">Y</button><button data-key="U">U</button><button data-key="I">I</button><button data-key="O">O</button><button data-key="P">P</button>
   </div>
@@ -363,8 +429,8 @@ document.addEventListener('DOMContentLoaded', () => {
 'recently','skeleton','triangle','universe','villager','yourself','glorious','haunting','inventor','jokester','keyboard','nautical','observed','princess','quantity','whistled','brilliant','decision','judgment','research','solution','variety','accepted','graphics','harmony','machine','remarks','violent','boundary','document','historic','journal','knuckle','quilts','xylose','zipped','approx','xenial','afraid','before','chance','during','gentle','higher','indeed','locker','modern','native','option','profit',
 'quarry','result','stream','tribal','unfold','victor','xenons','zephyr','action','choice','defeat','entire','global','hushed','injury','joyful','lovely','medium','narrow','openly','pocket','quotes','relate','sector','treaty','unable','vector','warmth','xylem','yields','accord',
 'depend','extend','firmly','groups','locked','matrix','revolve','smooth','trains','avenue','brunch','chapel','exceed','hollow','mobile','opened','ranger','stripe','towers','upbeat','asking','border','danger','endless','freeze','goblin','intact','poetry','secure','triple','wisdom','zapped','arctic','bronze','crisis','employ','hunger','lights','member','turban','abroad','budget','carbon','define','expert','length','opener','sketch','victim',
-'muscle','deeper','banner','detail','helper','portal','archer','butter','clover','eleven','hammer','iguana','ladder','monkey','orange','pencil','school','turtle','uncle','valley','window','yellow','zebra','answer','branch','cloudy','donkey','enough','flower','ground','hungry','inside','jungle','kitten','letter','middle','nephew','october','pickle','quiver','ribbon','things','upward','violet','waffle','yogurt','zipper','always',
-'banana','candle','doctor','engine','finger','handle','iguana','kindly','listen','market','nature','person','quarter','reason','summer','turkey','united','violin','winter','yearly','zombie'
+'muscle','deeper','banner','detail','helper','portal','archer','butter','clover','eleven','hammer','iguana','ladder','monkey','orange','pencil','quiver','school','turtle','uncle','valley','window','yellow','zebra','answer','branch','cloudy','donkey','enough','flower','ground','hungry','inside','jungle','kitten','letter','middle','nephew','october','pickle','quiver','ribbon','simple','things','upward','violet','waffle','yogurt','zipper','always',
+'banana','candle','doctor','engine','finger','handle','iguana','kindly','listen','market','nature','office','person','quarter','reason','summer','turkey','united','violin','winter','yearly','zombie'
       ],
       hard: [
 'champion','astronaut','javascript','terraform','lambda','elephant','basketball','spaceship','brilliant','decision','research','solution','universe','variety','accepted','graphics','harmony','machine','natural','perfect','quality','remarks','shelter','tonight','violent','whisper','boundary','document','friendly','historic','journal','machine','natural','perfect','quality','remarks','shelter','tonight','violent','whisper','boundary','xerces','zoning','quoted','threat','weight','xylose','zipped','approx','belief',
@@ -545,6 +611,13 @@ document.addEventListener('DOMContentLoaded', () => {
     lobbyDiv.classList.toggle('light-mode', mode === 'light');
     gameAreaDiv.classList.toggle('light-mode', mode === 'light');
     virtualKeyboard.classList.toggle('light-mode', mode === 'light');
+    
+    // Theme keyboard control buttons
+    document.querySelectorAll('.keyboard-control-btn').forEach(el => {
+      el.classList.toggle('light-mode', mode === 'light');
+    });
+    document.querySelector('.keyboard-title')?.classList.toggle('light-mode', mode === 'light');
+    
     document.getElementById('settings-label').classList.toggle('light-mode', mode === 'light');
     document.getElementById('title').classList.toggle('light-mode', mode === 'light');
     document.querySelectorAll('.lobby-form input, .lobby-form select').forEach(el => {
@@ -1563,7 +1636,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // FIXED: Improved letter input handling with debug logging
   function handleLetterInput(letter) {
-    console.log('handleLetterInput called with:', letter, 'activeWord:', activeWord, 'activeCellIndex:', activeCellIndex);
+    console.log('handleLetterInput called with:', letter, 'activeWord:', activeWord?.word, 'activeCellIndex:', activeCellIndex);
     
     if (!activeWord || gameOver) {
       console.log('No active word or game over, returning');
@@ -1577,8 +1650,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let row = activeWord.row + (activeWord.dir === "down" ? activeCellIndex : 0);
     let col = activeWord.col + (activeWord.dir === "across" ? activeCellIndex : 0);
     
-    console.log('Setting letter', letter, 'at position', row, col);
+    console.log('Setting letter', letter, 'at position', row, col, 'in playerGrid');
     playerGrid[row][col] = letter.toLowerCase();
+    
+    console.log('playerGrid after update:', playerGrid[row][col]);
     renderGrid();
     checkWordCompletion(activeWord);
     
@@ -1594,6 +1669,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (nextWordIndex !== -1) {
         console.log('Selecting next word:', wordsMap[nextWordIndex].word);
         selectWord(wordsMap[nextWordIndex]);
+      } else {
+        console.log('No more unsolved words found');
       }
     }
   }
@@ -1798,16 +1875,41 @@ document.addEventListener('DOMContentLoaded', () => {
   function initializeVirtualKeyboard() {
     if (!virtualKeyboard) return;
     
-    virtualKeyboard.querySelectorAll('button').forEach(btn => {
+    // Add event listeners for control buttons
+    const dockBtn = document.getElementById('dock-keyboard');
+    const closeBtn = document.getElementById('close-keyboard');
+    
+    if (dockBtn) {
+      dockBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        virtualKeyboard.classList.toggle('docked');
+        const isDocked = virtualKeyboard.classList.contains('docked');
+        dockBtn.textContent = isDocked ? '⇈' : '⇅';
+        dockBtn.title = isDocked ? 'Undock' : 'Dock';
+        console.log('Keyboard docked:', isDocked);
+      });
+    }
+    
+    if (closeBtn) {
+      closeBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        showVirtualKeyboard(false);
+        console.log('Keyboard closed');
+      });
+    }
+    
+    // Letter and delete button event listeners
+    virtualKeyboard.querySelectorAll('button[data-key]').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
         
-        console.log('Virtual keyboard button clicked:', btn.textContent, 'Active word:', activeWord);
+        const key = btn.dataset.key;
+        console.log('Virtual keyboard button clicked:', key, 'Active word:', activeWord?.word);
         
-        const key = btn.dataset.key || btn.textContent.trim();
-        
-        if (key === "Backspace" || btn.id === "delete" || key === "⌫") {
+        if (key === "Backspace") {
           console.log('Virtual backspace pressed');
           handleBackspace();
         } else if (key && key.match(/^[A-Z]$/)) {
@@ -1836,11 +1938,6 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
           btn.style.transform = '';
         }, 100);
-      });
-      
-      // Prevent double-tap zoom on mobile
-      btn.addEventListener('touchstart', (e) => {
-        e.preventDefault();
       });
     });
   }
