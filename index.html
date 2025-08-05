@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Remove problematic manifest and icons that point to other repos -->
+  <!-- Web App Manifest -->
+  <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#667eea">
   <!-- PWA Meta Tags -->
   <meta name="mobile-web-app-capable" content="yes">
@@ -68,7 +69,7 @@
     .leaderboard ul { list-style: none; padding: 0; margin: 0; }
     .leaderboard li { margin: 5px 0; font-size: 12px; color: #fff; font-weight: normal; }
     #mobile-input { position: absolute; top: -9999px; left: -9999px; opacity: 0; z-index: -1; font-size: 16px; width: 1px; height: 1px; border: none; background: transparent; color: transparent; outline: none; resize: none; }
-    .keyboard { display: flex; flex-direction: column; align-items: center; margin: 10px auto; user-select: none; }
+    .keyboard { display: flex; flex-direction: column; align-items: center; margin: 10px auto; user-select: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); padding: 10px; border-radius: 10px; z-index: 1000; }
     .keyboard-row { display: flex; justify-content: center; margin: 4px 0; }
     .keyboard-row button { width: 32px; height: 32px; margin: 2px; border: 2px solid #444; background: #222; color: #fff; font-family: monospace, 'Courier New', Courier; font-size: 14px; cursor: pointer; }
     .keyboard-row button:active { background: #555; }
@@ -560,7 +561,10 @@ document.addEventListener('DOMContentLoaded', () => {
     timeLeft = currentPuzzleTotalWords * 30;
     updateHUD();
     startTimer();
-    toggleKeyboard(true);
+    // Only show virtual keyboard on mobile when game starts
+    if (isMobile()) {
+      toggleKeyboard(true);
+    }
   }
 
   function updateHUD() {
@@ -657,7 +661,10 @@ document.addEventListener('DOMContentLoaded', () => {
     lobbyDiv.classList.remove('hidden');
     gameAreaDiv.style.display = 'none';
     renderLeaderboard();
-    toggleKeyboard(false);
+    // Hide virtual keyboard when returning to lobby
+    if (isMobile()) {
+      toggleKeyboard(false);
+    }
   };
 
   // --- Crossword Game Logic ---
@@ -1493,7 +1500,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function focusMobileInput() {
-    setTimeout(() => { mobileInput.focus(); }, 100);
+    // Don't focus mobile input on mobile devices to prevent keyboard popup
+    // Virtual keyboard will handle input instead
+    if (!isMobile()) {
+      setTimeout(() => { mobileInput.focus(); }, 100);
+    }
   }
 
   function handleMobileInput(char) {
@@ -1549,10 +1560,9 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   gameAreaDiv.addEventListener('touchstart', function(e) {
-    if (activeWord && e.target.classList.contains('cell')) {
-      e.preventDefault();
-      setTimeout(() => { mobileInput.focus(); }, 50);
-    }
+    // Remove the mobile input focus behavior that was causing keyboard popup
+    // Let the virtual keyboard handle input instead
+    e.preventDefault();
   });
 
   function handleLetterInput(letter) {
@@ -1699,13 +1709,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   
   function toggleKeyboard(show) {
-    if (virtualKeyboard) {
+    if (isMobile() && virtualKeyboard) {
       virtualKeyboard.classList.toggle('hidden', !show);
     }
   }
   
+  // Only show virtual keyboard on mobile, and only when game starts
   if (isMobile()) {
-    virtualKeyboard.classList.remove('hidden');
+    // Keep hidden initially, will show when game starts
+    virtualKeyboard.classList.add('hidden');
     virtualKeyboard.querySelectorAll('button').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
@@ -1719,6 +1731,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   } else {
+    // Hide completely on desktop
     virtualKeyboard.classList.add('hidden');
   }
 
