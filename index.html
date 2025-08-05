@@ -363,8 +363,8 @@ document.addEventListener('DOMContentLoaded', () => {
 'recently','skeleton','triangle','universe','villager','yourself','glorious','haunting','inventor','jokester','keyboard','nautical','observed','princess','quantity','whistled','brilliant','decision','judgment','research','solution','variety','accepted','graphics','harmony','machine','remarks','violent','boundary','document','historic','journal','knuckle','quilts','xylose','zipped','approx','xenial','afraid','before','chance','during','gentle','higher','indeed','locker','modern','native','option','profit',
 'quarry','result','stream','tribal','unfold','victor','xenons','zephyr','action','choice','defeat','entire','global','hushed','injury','joyful','lovely','medium','narrow','openly','pocket','quotes','relate','sector','treaty','unable','vector','warmth','xylem','yields','accord',
 'depend','extend','firmly','groups','locked','matrix','revolve','smooth','trains','avenue','brunch','chapel','exceed','hollow','mobile','opened','ranger','stripe','towers','upbeat','asking','border','danger','endless','freeze','goblin','intact','poetry','secure','triple','wisdom','zapped','arctic','bronze','crisis','employ','hunger','lights','member','turban','abroad','budget','carbon','define','expert','length','opener','sketch','victim',
-'muscle','deeper','banner','detail','helper','portal','archer','butter','clover','eleven','hammer','iguana','ladder','monkey','orange','pencil','quiver','school','turtle','uncle','valley','window','yellow','zebra','answer','branch','cloudy','donkey','enough','flower','ground','hungry','inside','jungle','kitten','letter','middle','nephew','october','pickle','quiver','ribbon','simple','things','upward','violet','waffle','yogurt','zipper','always',
-'banana','candle','doctor','engine','finger','handle','iguana','kindly','listen','market','nature','office','person','quarter','reason','summer','turkey','united','violin','winter','yearly','zombie'
+'muscle','deeper','banner','detail','helper','portal','archer','butter','clover','eleven','hammer','iguana','ladder','monkey','orange','pencil','school','turtle','uncle','valley','window','yellow','zebra','answer','branch','cloudy','donkey','enough','flower','ground','hungry','inside','jungle','kitten','letter','middle','nephew','october','pickle','quiver','ribbon','things','upward','violet','waffle','yogurt','zipper','always',
+'banana','candle','doctor','engine','finger','handle','iguana','kindly','listen','market','nature','person','quarter','reason','summer','turkey','united','violin','winter','yearly','zombie'
       ],
       hard: [
 'champion','astronaut','javascript','terraform','lambda','elephant','basketball','spaceship','brilliant','decision','research','solution','universe','variety','accepted','graphics','harmony','machine','natural','perfect','quality','remarks','shelter','tonight','violent','whisper','boundary','document','friendly','historic','journal','machine','natural','perfect','quality','remarks','shelter','tonight','violent','whisper','boundary','xerces','zoning','quoted','threat','weight','xylose','zipped','approx','belief',
@@ -810,6 +810,12 @@ document.addEventListener('DOMContentLoaded', () => {
     updateHUD();
     renderGrid();
     renderClues();
+    
+    // FIXED: Automatically select the first word so virtual keyboard can work immediately
+    if (wordsMap.length > 0) {
+      console.log('Auto-selecting first word for input:', wordsMap[0].word);
+      selectWord(wordsMap[0]);
+    }
   }
 
   function placeWord(word, row, col, dir) {
@@ -1555,14 +1561,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // FIXED: Improved letter input handling
+  // FIXED: Improved letter input handling with debug logging
   function handleLetterInput(letter) {
-    if (!activeWord || gameOver) return;
-    if (activeCellIndex >= activeWord.word.length) return;
+    console.log('handleLetterInput called with:', letter, 'activeWord:', activeWord, 'activeCellIndex:', activeCellIndex);
+    
+    if (!activeWord || gameOver) {
+      console.log('No active word or game over, returning');
+      return;
+    }
+    if (activeCellIndex >= activeWord.word.length) {
+      console.log('Already at end of word, returning');
+      return;
+    }
     
     let row = activeWord.row + (activeWord.dir === "down" ? activeCellIndex : 0);
     let col = activeWord.col + (activeWord.dir === "across" ? activeCellIndex : 0);
     
+    console.log('Setting letter', letter, 'at position', row, col);
     playerGrid[row][col] = letter.toLowerCase();
     renderGrid();
     checkWordCompletion(activeWord);
@@ -1570,30 +1585,40 @@ document.addEventListener('DOMContentLoaded', () => {
     // Move to next empty cell in the same word
     if (activeCellIndex < activeWord.word.length - 1) {
       activeCellIndex++;
+      console.log('Moving to next cell, activeCellIndex now:', activeCellIndex);
       focusCell();
     } else {
+      console.log('Word complete, finding next unsolved word');
       // Word is complete, move to next unsolved word
       let nextWordIndex = wordsMap.findIndex(w => !w.solved);
       if (nextWordIndex !== -1) {
+        console.log('Selecting next word:', wordsMap[nextWordIndex].word);
         selectWord(wordsMap[nextWordIndex]);
       }
     }
   }
 
-  // FIXED: Improved backspace handling
+  // FIXED: Improved backspace handling with debug logging
   function handleBackspace() {
-    if (!activeWord || gameOver) return;
+    console.log('handleBackspace called, activeWord:', activeWord, 'activeCellIndex:', activeCellIndex);
+    
+    if (!activeWord || gameOver) {
+      console.log('No active word or game over, returning');
+      return;
+    }
     
     let row = activeWord.row + (activeWord.dir === "down" ? activeCellIndex : 0);
     let col = activeWord.col + (activeWord.dir === "across" ? activeCellIndex : 0);
     
     // If current cell is empty, move back and clear that cell
     if (playerGrid[row][col] === "" && activeCellIndex > 0) {
+      console.log('Current cell empty, moving back');
       activeCellIndex--;
       row = activeWord.row + (activeWord.dir === "down" ? activeCellIndex : 0);
       col = activeWord.col + (activeWord.dir === "across" ? activeCellIndex : 0);
     }
     
+    console.log('Clearing cell at position', row, col);
     playerGrid[row][col] = "";
     renderGrid();
     focusCell();
@@ -1769,18 +1794,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   
-  // FIXED: Virtual keyboard event listeners with proper data attributes
-  if (virtualKeyboard) {
+  // FIXED: Virtual keyboard event listeners - properly connected to crossword input
+  function initializeVirtualKeyboard() {
+    if (!virtualKeyboard) return;
+    
     virtualKeyboard.querySelectorAll('button').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
         
-        const key = btn.dataset.key || btn.textContent;
+        console.log('Virtual keyboard button clicked:', btn.textContent, 'Active word:', activeWord);
         
-        if (key === "Backspace" || btn.id === "delete") {
+        const key = btn.dataset.key || btn.textContent.trim();
+        
+        if (key === "Backspace" || btn.id === "delete" || key === "⌫") {
+          console.log('Virtual backspace pressed');
           handleBackspace();
         } else if (key && key.match(/^[A-Z]$/)) {
+          console.log('Virtual letter pressed:', key);
           handleLetterInput(key);
         }
         
@@ -1798,18 +1829,24 @@ document.addEventListener('DOMContentLoaded', () => {
       
       // Touch feedback
       btn.addEventListener('touchstart', (e) => {
-        e.preventDefault();
         btn.style.transform = 'scale(0.95)';
       });
       
       btn.addEventListener('touchend', (e) => {
-        e.preventDefault();
         setTimeout(() => {
           btn.style.transform = '';
         }, 100);
       });
+      
+      // Prevent double-tap zoom on mobile
+      btn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+      });
     });
   }
+  
+  // Initialize keyboard after DOM is ready
+  initializeVirtualKeyboard();
 
   // FIXED: Sound Effects ---
   function playWinSound() {
