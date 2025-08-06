@@ -958,14 +958,30 @@ document.addEventListener('DOMContentLoaded', () => {
     wordsMap = [];
     clueCounter = 1;
     
-    // FIXED: Ensure we're using the correct word bank
+    // FIXED: Filter out words that don't have clues
     if (!wordBanks[difficulty] || wordBanks[difficulty].length === 0) {
       console.error(`No words found for difficulty: ${difficulty}`);
       return;
     }
     
-    // FIXED: Enforce word count requirements with better algorithm
+    // Filter to only include words that have corresponding clues
+    let availableWords = wordBanks[difficulty].filter(word => {
+      return clueBank[difficulty] && clueBank[difficulty][word.toLowerCase()];
+    });
+    
+    console.log(`Filtered ${wordBanks[difficulty].length} words down to ${availableWords.length} words with clues for ${difficulty}`);
+    
+    if (availableWords.length === 0) {
+      console.error(`No words with clues found for difficulty: ${difficulty}`);
+      return;
+    }
+    
     let targetWordCount = Math.floor(Math.random() * (max - min + 1)) + min;
+    // Adjust target if we don't have enough words with clues
+    if (targetWordCount > availableWords.length) {
+      targetWordCount = Math.min(max, availableWords.length);
+    }
+    
     let attempts = 0;
     let maxAttempts = 50;
     
@@ -976,8 +992,8 @@ document.addEventListener('DOMContentLoaded', () => {
       wordsMap = [];
       clueCounter = 1;
       
-      // FIXED: Make sure we're using the current difficulty's word bank
-      let shuffledWords = [...wordBanks[difficulty]].sort(() => 0.5 - Math.random());
+      // Use only words that have clues
+      let shuffledWords = [...availableWords].sort(() => 0.5 - Math.random());
       
       if (shuffledWords.length > 0) {
         // Place first word in center
