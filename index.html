@@ -1068,19 +1068,27 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // FIXED: Add click handler for words in cells
             div.onclick = () => {
-              let clickedWord = wordsMap.find(w =>
+              // Find ALL words that contain this cell
+              let wordsAtCell = wordsMap.filter(w =>
                 r >= w.row && c >= w.col &&
                 (w.dir === "across" ? r === w.row && c < w.col + w.word.length : c === w.col && r < w.row + w.word.length)
               );
-              if (clickedWord) {
+              
+              if (wordsAtCell.length > 0) {
+                // If multiple words intersect, prefer the one that's not currently selected
+                let clickedWord = wordsAtCell.length > 1 && activeWord && wordsAtCell.includes(activeWord) 
+                  ? wordsAtCell.find(w => w !== activeWord) || wordsAtCell[0]
+                  : wordsAtCell[0];
+                
                 selectWord(clickedWord);
-                // Set activeCellIndex to the clicked cell position within the word
+                // FIXED: Set activeCellIndex to the clicked cell position within the word
                 if (clickedWord.dir === "across") {
                   activeCellIndex = c - clickedWord.col;
                 } else {
                   activeCellIndex = r - clickedWord.row;
                 }
                 focusCell();
+                focusMobileInput();
               }
             };
           }
@@ -1543,21 +1551,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // FIXED: Improved backspace handling - works from any position in word
   function handleBackspace() {
     if (!activeWord || gameOver) return;
     
     let row = activeWord.row + (activeWord.dir === "down" ? activeCellIndex : 0);
     let col = activeWord.col + (activeWord.dir === "across" ? activeCellIndex : 0);
     
-    if (playerGrid[row][col] === "" && activeCellIndex > 0) {
+    // Clear current cell if it has content
+    if (playerGrid[row][col] !== "") {
+      playerGrid[row][col] = "";
+      renderGrid();
+      focusCell();
+      return;
+    }
+    
+    // If current cell is empty, move back to previous cell and clear it
+    if (activeCellIndex > 0) {
       activeCellIndex--;
       row = activeWord.row + (activeWord.dir === "down" ? activeCellIndex : 0);
       col = activeWord.col + (activeWord.dir === "across" ? activeCellIndex : 0);
+      playerGrid[row][col] = "";
+      renderGrid();
+      focusCell();
     }
-    
-    playerGrid[row][col] = "";
-    renderGrid();
-    focusCell();
   }
 
   function handleMobileInput(char) {
@@ -1569,7 +1586,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function handleMobileBackspace() {
     if (!activeWord || gameOver) return;
-    handleBackspace();
+    
+    let row = activeWord.row + (activeWord.dir === "down" ? activeCellIndex : 0);
+    let col = activeWord.col + (activeWord.dir === "across" ? activeCellIndex : 0);
+    
+    // Clear current cell if it has content
+    if (playerGrid[row][col] !== "") {
+      playerGrid[row][col] = "";
+      renderGrid();
+      focusCell();
+      return;
+    }
+    
+    // If current cell is empty, move back to previous cell and clear it
+    if (activeCellIndex > 0) {
+      activeCellIndex--;
+      row = activeWord.row + (activeWord.dir === "down" ? activeCellIndex : 0);
+      col = activeWord.col + (activeWord.dir === "across" ? activeCellIndex : 0);
+      playerGrid[row][col] = "";
+      renderGrid();
+      focusCell();
+    }
   }
 
   mobileInput.addEventListener('input', function(e) {
@@ -1760,7 +1797,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const key = btn.dataset.key;
         
         if (key === "Backspace") {
-          handleBackspace();
+          handleMobileBackspace(); // Use mobile-specific backspace
         } else if (key && key.match(/^[A-Z]$/)) {
           handleLetterInput(key);
         }
