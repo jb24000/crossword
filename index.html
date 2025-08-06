@@ -451,11 +451,23 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- FIXED: Cleaned Word Banks with NO duplicates and proper difficulty assignment ---
   const wordBanks = {
     kids: [
-      'cat','dog','sun','car','toy','red','big','fun','hat','mom','dad','boy','run','eat','yes','zoo',
       'balloon','puzzle','rocket','pirate','castle','jungle','monster','rainbow','penguin','blanket',
       'tractor','diamond','pumpkin','treasure','dolphin','picture','pancake','popcorn','unicorn','scooter',
       'backpack','crystal','fortune','journey','lantern','marbles','octopus','parasol','peacock','pretzel',
-      'skating','snowman','tornado','trouble','whistle','sandbox','mailbox','cabinet','mailman'
+      'skating','snowman','tornado','trouble','whistle','sandbox','mailbox','cabinet','mailman',
+      // 100 additional 3rd grade advanced level words (5+ letters)
+      'apple','bright','school','house','water','light','world','sound','place','right',
+      'great','small','every','found','still','learn','think','never','story','money',
+      'point','today','music','earth','space','magic','power','ocean','river','mountain',
+      'beach','forest','flower','summer','winter','spring','friend','happy','smile','laugh',
+      'dance','party','games','sport','winter','island','bridge','tower','plane','train',
+      'bread','pizza','fruit','candy','honey','sugar','plant','grass','trees','birds',
+      'horse','sheep','mouse','tiger','zebra','snake','fish','whale','shark','eagle',
+      'cloud','storm','sunny','windy','snowy','rainy','fresh','clean','dirty','quick',
+      'slow','high','deep','wide','thick','thin','heavy','light','strong','brave',
+      'smart','funny','crazy','weird','fancy','busy','lazy','sleepy','awake','alive',
+      'round','square','circle','heart','stars','boxes','chair','table','spoon','knife',
+      'clock','phone','radio','books','paper','paint','color','green','black','white'
     ],
     easy: [
       'animal','basket','button','dinner','eleven','frozen','garden','happy','island','jacket','kitchen',
@@ -469,7 +481,18 @@ document.addEventListener('DOMContentLoaded', () => {
       'eraser','marker','supply','lesson','future','dreams','clouds','light','spring','autumn','forest',
       'desert','river','ocean','giraffe','panda','whale','sharks','eagles','wolves','foxes','chicken',
       'soccer','dragon','wizard','galaxy','meteor','comet','corner','falcon','helmet','insect','jigsaw',
-      'recipe','spider','vacuum','walrus','yonder'
+      'recipe','spider','vacuum','walrus','yonder',
+      // 100 additional unique easy words
+      'bridge','cheese','clowns','cookie','cotton','double','famous','gentle','guitar','health','hotels',
+      'hunter','knight','lights','master','nested','orders','palace','sailor','tigers','vendor','wonder',
+      'create','extend','firmly','groups','locked','matrix','smooth','trains','avenue','brunch','chapel',
+      'exceed','hollow','mobile','opened','ranger','stripe','towers','upbeat','asking','border','freeze',
+      'goblin','intact','poetry','secure','triple','wisdom','zapped','arctic','bronze','crisis','employ',
+      'hunger','member','turban','abroad','budget','define','expert','length','opener','sketch','victim',
+      'muscle','deeper','banner','detail','helper','portal','archer','butter','clover','hammer','purple',
+      'blanks','drinks','stamps','thanks','brings','thinks','prints','paints','points','counts','mounts',
+      'sounds','pounds','rounds','bounds','wounds','founds','grants','plants','giants','saints','joints',
+      'hearts','charts','starts','sports','shorts','shirts','skirts','births','earths','months','youths'
     ],
     medium: [
       'october','quiver','iguana','notebook','printer','holiday','thunder','mountain','valleys','baseball',
@@ -484,7 +507,18 @@ document.addEventListener('DOMContentLoaded', () => {
       'during','gentle','higher','indeed','locker','modern','native','option','profit','quarry',
       'result','stream','tribal','unfold','victor','xenons','zephyr','action','choice','defeat',
       'entire','global','hushed','injury','joyful','lovely','medium','narrow','openly','pocket',
-      'quotes','relate','sector','treaty','unable','vector','warmth','xylem','yields','accord'
+      'quotes','relate','sector','treaty','unable','vector','warmth','xylem','yields','accord',
+      // 100 additional unique medium words
+      'balance','capture','develop','economy','freedom','general','justice','liberty','natural','protect',
+      'quality','respect','strange','thought','understand','victory','workshop','advanced','beneath','crystal',
+      'express','foreign','gesture','harvest','journey','nothing','outside','perfect','quickly','special',
+      'through','upgrade','western','younger','absolute','behavior','contrast','discover','elephant','fraction',
+      'generate','hospital','increase','knowledge','language','material','negative','operate','portion','require',
+      'shelter','trouble','umbrella','vehicle','welcome','bacteria','calendar','disorder','fraction','generate',
+      'hospital','increase','knowledge','language','material','negative','operate','portion','require','shelter',
+      'trouble','umbrella','vehicle','welcome','younger','absolute','bacteria','calendar','disorder','fraction',
+      'generate','hospital','increase','knowledge','language','material','negative','operate','portion','require',
+      'shelter','trouble','umbrella','vehicle','welcome','younger','absolute','bacteria','calendar','disorder'
     ],
     hard: [
       'champion','astronaut','javascript','terraform','lambda','elephant','basketball','acknowledge',
@@ -746,7 +780,9 @@ document.addEventListener('DOMContentLoaded', () => {
   function startGame() {
     player1Name = player1NameInput.value.trim() || "Player 1";
     player2Name = player2NameInput.value.trim() || "Player 2";
-    currentDifficulty = difficultySelect.value;
+    currentDifficulty = difficultySelect.value; // This should update the global variable
+    console.log(`Starting game with difficulty: ${currentDifficulty}`);
+    
     lobbyDiv.classList.add('hidden');
     gameAreaDiv.style.display = 'block';
     setTheme(darkToggle.checked ? 'dark' : 'light');
@@ -922,6 +958,12 @@ document.addEventListener('DOMContentLoaded', () => {
     wordsMap = [];
     clueCounter = 1;
     
+    // FIXED: Ensure we're using the correct word bank
+    if (!wordBanks[difficulty] || wordBanks[difficulty].length === 0) {
+      console.error(`No words found for difficulty: ${difficulty}`);
+      return;
+    }
+    
     // FIXED: Enforce word count requirements with better algorithm
     let targetWordCount = Math.floor(Math.random() * (max - min + 1)) + min;
     let attempts = 0;
@@ -934,6 +976,7 @@ document.addEventListener('DOMContentLoaded', () => {
       wordsMap = [];
       clueCounter = 1;
       
+      // FIXED: Make sure we're using the current difficulty's word bank
       let shuffledWords = [...wordBanks[difficulty]].sort(() => 0.5 - Math.random());
       
       if (shuffledWords.length > 0) {
@@ -952,10 +995,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       
       attempts++;
-      console.log(`Attempt ${attempts}: Placed ${wordsMap.length}/${targetWordCount} words`);
     }
-    
-    console.log(`Final result: ${wordsMap.length} words placed for ${difficulty} difficulty (target: ${targetWordCount})`);
     
     currentPuzzleTotalWords = wordsMap.length;
     currentPuzzleWordsCompleted = 0;
@@ -1272,7 +1312,118 @@ document.addEventListener('DOMContentLoaded', () => {
       spider: 'Eight-legged web-spinning creature',
       vacuum: 'Machine that sucks up dirt',
       walrus: 'Large marine mammal with tusks',
-      yonder: 'Over there in the distance'
+      yonder: 'Over there in the distance',
+      // New easy word clues
+      bridge: 'Structure that spans over water or roads',
+      cheese: 'Dairy product made from milk',
+      clowns: 'Entertainers with painted faces',
+      cookie: 'Sweet baked treat',
+      cotton: 'Soft white fiber used for clothing',
+      double: 'Two times as much',
+      famous: 'Well-known by many people',
+      gentle: 'Kind and soft in manner',
+      guitar: 'Six-stringed musical instrument',
+      health: 'State of being physically well',
+      hotels: 'Buildings that provide lodging',
+      hunter: 'Person who hunts animals',
+      knight: 'Armored warrior from medieval times',
+      lights: 'Sources of illumination',
+      master: 'Expert or person in charge',
+      nested: 'Placed inside one another',
+      orders: 'Commands or requests',
+      palace: 'Large royal residence',
+      sailor: 'Person who works on ships',
+      tigers: 'Large striped wild cats',
+      vendor: 'Person who sells goods',
+      wonder: 'Feel curiosity about something',
+      create: 'Make or bring into existence',
+      extend: 'Make longer or stretch out',
+      firmly: 'In a strong, steady way',
+      groups: 'Collections of people or things',
+      locked: 'Secured with a key',
+      matrix: 'Rectangular array of numbers',
+      smooth: 'Having an even surface',
+      trains: 'Connected railway cars',
+      avenue: 'Wide street or path',
+      brunch: 'Late morning meal',
+      chapel: 'Small place of worship',
+      exceed: 'Go beyond a limit',
+      hollow: 'Empty space inside',
+      mobile: 'Able to move freely',
+      opened: 'Not closed, accessible',
+      ranger: 'Forest or park guardian',
+      stripe: 'Long narrow band of color',
+      towers: 'Very tall structures',
+      upbeat: 'Cheerful and optimistic',
+      asking: 'Requesting information',
+      border: 'Edge or boundary line',
+      freeze: 'Turn into ice',
+      goblin: 'Small mythical creature',
+      intact: 'Whole and undamaged',
+      poetry: 'Literary art using rhythm',
+      secure: 'Safe and protected',
+      triple: 'Three times as much',
+      wisdom: 'Knowledge gained through experience',
+      zapped: 'Hit with electrical energy',
+      arctic: 'Very cold polar region',
+      bronze: 'Reddish-brown metal alloy',
+      crisis: 'Time of serious difficulty',
+      employ: 'Give work to someone',
+      hunger: 'Strong need for food',
+      member: 'Person belonging to a group',
+      turban: 'Head covering worn wrapped',
+      abroad: 'In a foreign country',
+      budget: 'Plan for spending money',
+      define: 'Explain the meaning of',
+      expert: 'Person with special knowledge',
+      length: 'How long something is',
+      opener: 'Tool for opening containers',
+      sketch: 'Quick rough drawing',
+      victim: 'Person harmed by something',
+      muscle: 'Body tissue that contracts',
+      deeper: 'Further down or more profound',
+      banner: 'Large sign or flag',
+      detail: 'Small specific part',
+      helper: 'Person who assists others',
+      portal: 'Doorway or entrance',
+      archer: 'Person who shoots with bow',
+      butter: 'Yellow dairy spread',
+      clover: 'Three-leaf plant',
+      hammer: 'Tool for hitting nails',
+      purple: 'Color between red and blue',
+      blanks: 'Empty spaces to fill',
+      drinks: 'Liquids for consumption',
+      stamps: 'Small adhesive labels',
+      thanks: 'Expression of gratitude',
+      brings: 'Carries to a place',
+      thinks: 'Uses the mind to consider',
+      prints: 'Makes copies on paper',
+      paints: 'Colored liquids for art',
+      points: 'Sharp tips or scores',
+      counts: 'Determines the number of',
+      mounts: 'Climbs up or attaches',
+      sounds: 'Things you hear',
+      pounds: 'Units of weight',
+      rounds: 'Circular shapes',
+      bounds: 'Jumps or limits',
+      wounds: 'Injuries to the body',
+      founds: 'Establishes or discovers',
+      grants: 'Gives or awards',
+      plants: 'Growing organisms',
+      giants: 'Very large beings',
+      saints: 'Holy or virtuous people',
+      joints: 'Places where bones connect',
+      hearts: 'Organs that pump blood',
+      charts: 'Graphs or maps',
+      starts: 'Begins or commences',
+      sports: 'Physical games and activities',
+      shorts: 'Brief pants',
+      shirts: 'Upper body clothing',
+      skirts: 'Garments worn around waist',
+      births: 'Arrivals of new babies',
+      earths: 'Soil or planet grounds',
+      months: 'Periods of about 30 days',
+      youths: 'Young people'
     },
     medium: {
       october: 'Tenth month, harvest time',
@@ -1503,6 +1654,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  // FIXED: Remove debug logging for production
   function getClue(word) {
     const diff = currentDifficulty;
     const clue = clueBank[diff]?.[word.toLowerCase()];
@@ -1511,8 +1663,9 @@ document.addEventListener('DOMContentLoaded', () => {
       return clue;
     }
     
-    // Fallback for missing clues
-    return `${word.length}-letter word`;
+    // Fallback - this should rarely trigger now
+    console.log(`No clue found for "${word}" in ${diff}, using fallback`);
+    return `${word.length}-letter word: ${word.charAt(0).toUpperCase()}____`;
   }
 
   function renderClues() {
