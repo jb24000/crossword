@@ -922,32 +922,40 @@ document.addEventListener('DOMContentLoaded', () => {
     wordsMap = [];
     clueCounter = 1;
     
-    // FIXED: Enforce word count requirements
+    // FIXED: Enforce word count requirements with better algorithm
     let targetWordCount = Math.floor(Math.random() * (max - min + 1)) + min;
-    let shuffledWords = [...wordBanks[difficulty]].sort(() => 0.5 - Math.random());
-    let selectedWords = [];
     let attempts = 0;
+    let maxAttempts = 50;
     
-    while (selectedWords.length < targetWordCount && attempts < 100) {
-      selectedWords = [];
+    while (wordsMap.length < targetWordCount && attempts < maxAttempts) {
+      // Reset for new attempt
       solutionGrid = Array.from({ length: gridSize }, () => Array(gridSize).fill(""));
+      playerGrid = Array.from({ length: gridSize }, () => Array(gridSize).fill(""));
       wordsMap = [];
       clueCounter = 1;
       
+      let shuffledWords = [...wordBanks[difficulty]].sort(() => 0.5 - Math.random());
+      
       if (shuffledWords.length > 0) {
-        placeWord(shuffledWords[0], Math.floor(gridSize / 2), Math.floor((gridSize - shuffledWords[0].length) / 2), "across");
-        selectedWords.push(shuffledWords[0]);
+        // Place first word in center
+        let firstWord = shuffledWords[0];
+        let startCol = Math.floor((gridSize - firstWord.length) / 2);
+        placeWord(firstWord, Math.floor(gridSize / 2), startCol, "across");
       }
       
-      for (let i = 1; i < shuffledWords.length && selectedWords.length < targetWordCount; i++) {
+      // Try to place remaining words
+      for (let i = 1; i < shuffledWords.length && wordsMap.length < targetWordCount; i++) {
         let word = shuffledWords[i];
-        let placed = placeWordSmart(word);
-        if (placed) {
-          selectedWords.push(word);
+        if (placeWordSmart(word)) {
+          // Word placed successfully
         }
       }
+      
       attempts++;
+      console.log(`Attempt ${attempts}: Placed ${wordsMap.length}/${targetWordCount} words`);
     }
+    
+    console.log(`Final result: ${wordsMap.length} words placed for ${difficulty} difficulty (target: ${targetWordCount})`);
     
     currentPuzzleTotalWords = wordsMap.length;
     currentPuzzleWordsCompleted = 0;
@@ -1066,8 +1074,16 @@ document.addEventListener('DOMContentLoaded', () => {
               div.textContent = playerGrid[r][c].toUpperCase();
             }
             
-            // FIXED: Add click handler for words in cells
-            div.onclick = () => {
+            // FIXED: Mobile touch events for word selection
+            div.addEventListener('touchstart', (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            });
+            
+            div.addEventListener('touchend', (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              
               // Find ALL words that contain this cell
               let wordsAtCell = wordsMap.filter(w =>
                 r >= w.row && c >= w.col &&
@@ -1081,7 +1097,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   : wordsAtCell[0];
                 
                 selectWord(clickedWord);
-                // FIXED: Set activeCellIndex to the clicked cell position within the word
+                // Set activeCellIndex to the clicked cell position within the word
                 if (clickedWord.dir === "across") {
                   activeCellIndex = c - clickedWord.col;
                 } else {
@@ -1089,6 +1105,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 focusCell();
                 focusMobileInput();
+              }
+            });
+            
+            // FIXED: Desktop click handler (keep existing functionality)
+            div.onclick = (e) => {
+              // Only trigger if not a touch device or if touch events didn't fire
+              if (!('ontouchstart' in window)) {
+                // Find ALL words that contain this cell
+                let wordsAtCell = wordsMap.filter(w =>
+                  r >= w.row && c >= w.col &&
+                  (w.dir === "across" ? r === w.row && c < w.col + w.word.length : c === w.col && r < w.row + w.word.length)
+                );
+                
+                if (wordsAtCell.length > 0) {
+                  // If multiple words intersect, prefer the one that's not currently selected
+                  let clickedWord = wordsAtCell.length > 1 && activeWord && wordsAtCell.includes(activeWord) 
+                    ? wordsAtCell.find(w => w !== activeWord) || wordsAtCell[0]
+                    : wordsAtCell[0];
+                  
+                  selectWord(clickedWord);
+                  // Set activeCellIndex to the clicked cell position within the word
+                  if (clickedWord.dir === "across") {
+                    activeCellIndex = c - clickedWord.col;
+                  } else {
+                    activeCellIndex = r - clickedWord.row;
+                  }
+                  focusCell();
+                  focusMobileInput();
+                }
               }
             };
           }
