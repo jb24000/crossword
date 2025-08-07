@@ -984,7 +984,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     updateHUD();
     
-    if (isMobile() || isTablet()) {
+    // Only show virtual keyboard on actual touch devices
+    const isTouchDevice = (isMobile() || isTablet()) && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    if (isTouchDevice) {
       showVirtualKeyboard(true);
       // Ensure mobile input is blurred on tablets to prevent system keyboard
       if (isTablet()) {
@@ -1096,7 +1098,9 @@ document.addEventListener('DOMContentLoaded', () => {
     gameAreaDiv.style.display = 'none';
     renderLeaderboard();
     
-    if (isMobile() || isTablet()) {
+    // Only hide virtual keyboard if it was shown (on touch devices)
+    const isTouchDevice = (isMobile() || isTablet()) && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    if (isTouchDevice) {
       showVirtualKeyboard(false);
       // Ensure mobile input is blurred
       mobileInput.blur();
@@ -2271,8 +2275,11 @@ document.addEventListener('DOMContentLoaded', () => {
   
   function showVirtualKeyboard(show) {
     if (virtualKeyboard) {
-      // Always show virtual keyboard on tablets and mobile devices
-      if (show && (isMobile() || isTablet())) {
+      // Only show virtual keyboard on actual touch devices (mobile phones and tablets)
+      const isTouchDevice = isMobile() || isTablet();
+      const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      
+      if (show && isTouchDevice && hasTouch) {
         virtualKeyboard.classList.remove('hidden');
         virtualKeyboard.style.display = 'flex';
         const currentTheme = (typeof(Storage) !== "undefined" && localStorage) ? localStorage.getItem('theme') : 'dark';
