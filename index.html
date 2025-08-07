@@ -1,15 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Web App Manifest -->
-  <link rel="manifest" href="manifest.json">
+  <!-- Enhanced PWA Manifest for True App Experience -->
+  <link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22NES%20Crossword%22%2C%22short_name%22%3A%22NES%20Crossword%22%2C%22description%22%3A%22Retro%208-bit%20style%20crossword%20puzzle%20game%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22fullscreen%22%2C%22background_color%22%3A%22%23667eea%22%2C%22theme_color%22%3A%22%23667eea%22%2C%22orientation%22%3A%22portrait%22%2C%22scope%22%3A%22.%2F%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk%2BM9QDwADhgGAWjR9awAAAABJRU5ErkJggg%3D%3D%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%7D%2C%7B%22src%22%3A%22data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk%2BM9QDwADhgGAWjR9awAAAABJRU5ErkJggg%3D%3D%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%2C%22categories%22%3A%5B%22games%22%2C%22entertainment%22%5D%2C%22lang%22%3A%22en%22%7D">
   <meta name="theme-color" content="#667eea">
-  <!-- PWA Meta Tags -->
+  <meta name="background-color" content="#667eea">
+  
+  <!-- Enhanced PWA Meta Tags for Native App Feel -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="NES Crossword">
   <meta name="application-name" content="NES Crossword">
+  <meta name="msapplication-TileColor" content="#667eea">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="apple-touch-fullscreen" content="yes">
+  <meta name="full-screen" content="yes">
+  <meta name="browsermode" content="application">
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
@@ -17,7 +24,45 @@
   <meta name="msapplication-tap-highlight" content="no" />
   <title>🎮 NES Crossword 🎮</title>
   <style>
-    body { font-family: monospace, 'Courier New', Courier; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: background 0.4s, color 0.4s; touch-action: manipulation; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+    /* PWA Fullscreen App Styles */
+    @media all and (display-mode: fullscreen),
+           all and (display-mode: standalone),
+           all and (display-mode: minimal-ui) {
+      body {
+        padding-top: env(safe-area-inset-top);
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+        padding-bottom: env(safe-area-inset-bottom);
+        overflow-x: hidden;
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+      }
+      
+      /* Hide any potential browser elements */
+      .browser-ui,
+      .url-bar,
+      .navigation-bar {
+        display: none !important;
+      }
+    }
+    
+    /* App-like behavior for installed PWA */
+    @media (display-mode: standalone) {
+      body {
+        background-attachment: fixed;
+        overscroll-behavior: none;
+        -webkit-overscroll-behavior: none;
+      }
+      
+      /* Enhanced app-like styling */
+      .container, #game-area {
+        -webkit-tap-highlight-color: transparent;
+        tap-highlight-color: transparent;
+      }
+    }
+    
+    body { font-family: monospace, 'Courier New', Courier; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: background 0.4s, color 0.4s; touch-action: manipulation; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; overscroll-behavior: none; -webkit-overscroll-behavior: none; }
     .container { max-width: 480px; margin: 0 auto; background: rgba(0,0,0,0.4); border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 -20px 40px rgba(0,0,0,0.3); padding: 32px 18px 24px 18px; display: flex; flex-direction: column; align-items: center; }
     .title { font-size: 24px; color: #00ff88; margin-bottom: 10px; font-weight: bold; text-shadow: 2px 2px 0px #000; letter-spacing: 1px; text-align: center; }
     .toggles { display: flex; justify-content: center; gap: 24px; margin-bottom: 18px; }
@@ -438,6 +483,84 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+  // PWA Installation Detection and Enhancement
+  const isPWA = window.matchMedia('(display-mode: standalone)').matches || 
+                window.matchMedia('(display-mode: fullscreen)').matches ||
+                (window.navigator.standalone === true) ||
+                document.referrer.includes('android-app://');
+
+  // Enhanced PWA experience
+  if (isPWA) {
+    console.log('🎮 NES Crossword - Running as installed PWA!');
+    document.body.classList.add('pwa-mode');
+    
+    // Hide install banner when running as PWA
+    const installBanner = document.getElementById('pwa-install-banner');
+    if (installBanner) {
+      installBanner.style.display = 'none';
+    }
+    
+    // Prevent any potential browser UI
+    if ('setAppBadge' in navigator) {
+      navigator.setAppBadge();
+    }
+    
+    // Enhanced fullscreen for true app experience
+    if (document.documentElement.requestFullscreen && !document.fullscreenElement) {
+      // Only auto-fullscreen on supported devices
+      if (/Android|iPad|iPhone/i.test(navigator.userAgent)) {
+        setTimeout(() => {
+          document.documentElement.requestFullscreen().catch(() => {
+            // Fullscreen not available, continue normally
+          });
+        }, 1000);
+      }
+    }
+  } else {
+    // Show PWA install prompt
+    console.log('🔗 Running in browser - Install as app for full experience');
+    
+    // Show install banner when running in browser
+    const installBanner = document.getElementById('pwa-install-banner');
+    if (installBanner && (isMobile() || isTablet())) {
+      setTimeout(() => {
+        installBanner.style.display = 'block';
+      }, 2000);
+      
+      // Auto-hide after 8 seconds
+      setTimeout(() => {
+        if (installBanner) {
+          installBanner.style.opacity = '0';
+          installBanner.style.transition = 'opacity 1s';
+        }
+      }, 8000);
+    }
+  }
+
+  // Add PWA styles
+  if (isPWA) {
+    const pwaStyles = document.createElement('style');
+    pwaStyles.textContent = `
+      .pwa-mode {
+        -webkit-app-region: drag;
+        app-region: drag;
+      }
+      .pwa-mode .container,
+      .pwa-mode #game-area,
+      .pwa-mode button,
+      .pwa-mode input,
+      .pwa-mode .cell {
+        -webkit-app-region: no-drag;
+        app-region: no-drag;
+      }
+      .pwa-mode .title::after {
+        content: " 📱";
+        opacity: 0.7;
+        font-size: 0.8em;
+      }
+    `;
+    document.head.appendChild(pwaStyles);
+  }
   // Music playlist
   const playlist = [
     "fs0BCIUQ7Ws", // NES Track 1
@@ -2283,6 +2406,33 @@ document.addEventListener('DOMContentLoaded', () => {
   showVirtualKeyboard(false);
   
   console.log('🎮 NES Crossword Game - Ad-Free Safari/iPad Optimized Edition initialized!');
+  
+  // Register Service Worker for PWA functionality
+  if ('serviceWorker' in navigator && !isPWA) {
+    const swCode = `
+      const CACHE_NAME = 'nes-crossword-v1';
+      self.addEventListener('install', () => {
+        self.skipWaiting();
+      });
+      self.addEventListener('activate', () => {
+        self.clients.claim();
+      });
+      self.addEventListener('fetch', (event) => {
+        if (event.request.mode === 'navigate') {
+          event.respondWith(fetch(event.request).catch(() => caches.match('/')));
+        }
+      });
+    `;
+    
+    const swBlob = new Blob([swCode], { type: 'application/javascript' });
+    const swUrl = URL.createObjectURL(swBlob);
+    
+    navigator.serviceWorker.register(swUrl).then(() => {
+      console.log('🔧 PWA Service Worker registered');
+    }).catch(() => {
+      console.log('ℹ️ Service Worker registration failed (not critical)');
+    });
+  }
 });
 </script>
 </body>
