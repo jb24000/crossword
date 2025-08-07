@@ -49,11 +49,11 @@
     #game-area { display: none; width: 100%; max-width: 600px; margin: 20px auto; padding: 20px; background: rgba(0,0,0,0.4); border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); text-align: center; position: relative; }
     #hud { margin: 10px; font-size: 12px; color: #FFD700; background: rgba(0,0,0,0.4); padding: 6px 12px; border-radius: 8px; border: 2px solid #FFD700; box-shadow: 2px 2px 0px #333; display: inline-block; }
     #crossword { display: grid; gap: 1px; background: #333; margin: 20px auto; padding: 8px; border: 4px solid #FFD700; border-radius: 12px; box-shadow: inset 4px 4px 0px #555, 4px 4px 0px #666; justify-content: center; width: fit-content; }
-    .cell { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: #ffffff; color: #000; font-size: 14px; border: 2px solid #333; position: relative; cursor: pointer; font-weight: bold; box-shadow: inset -2px -2px 0px #bbb, inset 2px 2px 0px #fff; transition: background 0.2s, transform 0.1s; }
+    .cell { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: #ffffff; color: #000; font-size: 14px; border: 2px solid #333; position: relative; cursor: pointer; font-weight: bold; box-shadow: inset -2px -2px 0px #bbb, inset 2px 2px 0px #fff; transition: background 0.2s, transform 0.1s; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
     .cell:hover { transform: scale(1.05); }
     .black { background: #111 !important; border: 2px solid #000 !important; box-shadow: inset -2px -2px 0px #000 !important; cursor: default; }
     .black:hover { transform: none; }
-    .clue-number { font-size: 8px; position: absolute; top: 1px; left: 2px; color: #444; }
+    .clue-number { font-size: 8px; position: absolute; top: 1px; left: 2px; color: #444; pointer-events: none; }
     .highlight { background: #FFD700 !important; color: #222 !important; animation: pulse 0.5s ease-in-out; }
     .active { outline: 2px solid #00ff88; animation: glow 1s ease-in-out infinite alternate; }
     
@@ -448,23 +448,22 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentTrackIndex = 0;
   let musicStarted = false;
 
-  // --- FIXED: Cleaned Word Banks with NO duplicates and proper difficulty assignment ---
+  // --- Word Banks ---
   const wordBanks = {
     kids: [
       'balloon','puzzle','rocket','pirate','castle','jungle','monster','rainbow','penguin','blanket',
       'tractor','diamond','pumpkin','treasure','dolphin','picture','pancake','popcorn','unicorn','scooter',
       'backpack','crystal','fortune','journey','lantern','marbles','octopus','parasol','peacock','pretzel',
       'skating','snowman','tornado','trouble','whistle','sandbox','mailbox','cabinet','mailman',
-      // 100 additional 3rd grade advanced level words (5+ letters)
       'apple','bright','school','house','water','light','world','sound','place','right',
       'great','small','every','found','still','learn','think','never','story','money',
       'point','today','music','earth','space','magic','power','ocean','river','mountain',
       'beach','forest','flower','summer','winter','spring','friend','happy','smile','laugh',
-      'dance','party','games','sport','winter','island','bridge','tower','plane','train',
+      'dance','party','games','sport','island','bridge','tower','plane','train',
       'bread','pizza','fruit','candy','honey','sugar','plant','grass','trees','birds',
       'horse','sheep','mouse','tiger','zebra','snake','fish','whale','shark','eagle',
       'cloud','storm','sunny','windy','snowy','rainy','fresh','clean','dirty','quick',
-      'slow','high','deep','wide','thick','thin','heavy','light','strong','brave',
+      'slow','high','deep','wide','thick','thin','heavy','strong','brave',
       'smart','funny','crazy','weird','fancy','busy','lazy','sleepy','awake','alive',
       'round','square','circle','heart','stars','boxes','chair','table','spoon','knife',
       'clock','phone','radio','books','paper','paint','color','green','black','white'
@@ -478,11 +477,10 @@ document.addEventListener('DOMContentLoaded', () => {
       'market','nature','office','person','quarter','reason','summer','turkey','united','violin','winter',
       'yearly','zombie','apples','bottle','circle','laptop','mouse','screen','coffee','remote','charge',
       'energy','family','friend','memory','silver','golden','planet','travel','teacher','student','library',
-      'eraser','marker','supply','lesson','future','dreams','clouds','light','spring','autumn','forest',
+      'eraser','marker','supply','lesson','future','dreams','clouds','spring','autumn','forest',
       'desert','river','ocean','giraffe','panda','whale','sharks','eagles','wolves','foxes','chicken',
       'soccer','dragon','wizard','galaxy','meteor','comet','corner','falcon','helmet','insect','jigsaw',
       'recipe','spider','vacuum','walrus','yonder',
-      // 100 additional unique easy words
       'bridge','cheese','clowns','cookie','cotton','double','famous','gentle','guitar','health','hotels',
       'hunter','knight','lights','master','nested','orders','palace','sailor','tigers','vendor','wonder',
       'create','extend','firmly','groups','locked','matrix','smooth','trains','avenue','brunch','chapel',
@@ -508,17 +506,12 @@ document.addEventListener('DOMContentLoaded', () => {
       'result','stream','tribal','unfold','victor','xenons','zephyr','action','choice','defeat',
       'entire','global','hushed','injury','joyful','lovely','medium','narrow','openly','pocket',
       'quotes','relate','sector','treaty','unable','vector','warmth','xylem','yields','accord',
-      // 100 additional unique medium words
       'balance','capture','develop','economy','freedom','general','justice','liberty','natural','protect',
       'quality','respect','strange','thought','understand','victory','workshop','advanced','beneath','crystal',
       'express','foreign','gesture','harvest','journey','nothing','outside','perfect','quickly','special',
       'through','upgrade','western','younger','absolute','behavior','contrast','discover','elephant','fraction',
       'generate','hospital','increase','knowledge','language','material','negative','operate','portion','require',
-      'shelter','trouble','umbrella','vehicle','welcome','bacteria','calendar','disorder','fraction','generate',
-      'hospital','increase','knowledge','language','material','negative','operate','portion','require','shelter',
-      'trouble','umbrella','vehicle','welcome','younger','absolute','bacteria','calendar','disorder','fraction',
-      'generate','hospital','increase','knowledge','language','material','negative','operate','portion','require',
-      'shelter','trouble','umbrella','vehicle','welcome','younger','absolute','bacteria','calendar','disorder'
+      'shelter','trouble','umbrella','vehicle','welcome','bacteria','calendar','disorder'
     ],
     hard: [
       'champion','astronaut','javascript','terraform','lambda','elephant','basketball','acknowledge',
@@ -540,7 +533,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentPuzzleWordsCompleted = 0, currentPuzzleTotalWords = 0;
   let timeLeft = 0, timerInterval, freeHintUsed = false, gameOver = false;
   let currentHighScore = 0, leaderboards = {};
-  let isTimedMode = true; // NEW: Timer mode toggle
+  let isTimedMode = true;
   
   if (typeof(Storage) !== "undefined" && localStorage) {
     leaderboards = JSON.parse(localStorage.getItem('crosswordLeaderboards') || '{}');
@@ -564,7 +557,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const playerTurnDisplay = document.getElementById('player-turn-display');
   const darkToggle = document.getElementById('darkToggle');
   const soundToggle = document.getElementById('soundToggle');
-  const timerToggle = document.getElementById('timerToggle'); // NEW: Timer toggle
+  const timerToggle = document.getElementById('timerToggle');
   const winSound = document.getElementById('win-sound');
   const loseSound = document.getElementById('lose-sound');
   const mobileInput = document.getElementById('mobile-input');
@@ -607,7 +600,6 @@ document.addEventListener('DOMContentLoaded', () => {
     showFade(this.checked ? '🔊 Sound ON' : '🔇 Sound OFF');
   });
 
-  // NEW: Timer mode toggle
   timerToggle.addEventListener('change', function () {
     isTimedMode = this.checked;
     if (typeof(Storage) !== "undefined" && localStorage) {
@@ -688,7 +680,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('settings-label').classList.toggle('light-mode', mode === 'light');
     document.getElementById('title').classList.toggle('light-mode', mode === 'light');
     
-    // Apply light mode to timer mode label
     document.querySelectorAll('.timer-mode-label').forEach(el => {
       el.classList.toggle('light-mode', mode === 'light');
     });
@@ -780,8 +771,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function startGame() {
     player1Name = player1NameInput.value.trim() || "Player 1";
     player2Name = player2NameInput.value.trim() || "Player 2";
-    currentDifficulty = difficultySelect.value; // This should update the global variable
-    console.log(`Starting game with difficulty: ${currentDifficulty}`);
+    currentDifficulty = difficultySelect.value;
     
     lobbyDiv.classList.add('hidden');
     gameAreaDiv.style.display = 'block';
@@ -812,7 +802,6 @@ document.addEventListener('DOMContentLoaded', () => {
     currentPuzzleTotalWords = wordsMap.length;
     currentPuzzleWordsCompleted = 0;
     
-    // FIXED: Improved timer with difficulty-based adjustments
     if (isTimedMode) {
       let baseTime = currentPuzzleTotalWords * 30;
       if (currentDifficulty === 'medium') baseTime += 60;
@@ -820,7 +809,7 @@ document.addEventListener('DOMContentLoaded', () => {
       timeLeft = baseTime;
       startTimer();
     } else {
-      timeLeft = 0; // Unlimited time
+      timeLeft = 0;
     }
     
     updateHUD();
@@ -847,7 +836,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function startTimer() {
-    if (!isTimedMode) return; // Don't start timer in unlimited mode
+    if (!isTimedMode) return;
     
     clearInterval(timerInterval);
     timerInterval = setInterval(() => {
@@ -879,7 +868,6 @@ document.addEventListener('DOMContentLoaded', () => {
     clearInterval(timerInterval);
     gameOver = true;
     if (completedSuccessfully) {
-      // FIXED: Only apply time bonus in timed mode
       let timeBonus = isTimedMode ? timeLeft * 10 : 0;
       currentPuzzleScore += timeBonus;
       if (isTimedMode) {
@@ -939,7 +927,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // --- FIXED: Crossword Game Logic with enforced word counts ---
+  // --- Crossword Game Logic ---
   function settingsForDifficulty(diff) {
     switch (diff) {
       case "kids": return { min: 5, max: 7, size: 7 };
@@ -958,18 +946,14 @@ document.addEventListener('DOMContentLoaded', () => {
     wordsMap = [];
     clueCounter = 1;
     
-    // FIXED: Filter out words that don't have clues
     if (!wordBanks[difficulty] || wordBanks[difficulty].length === 0) {
       console.error(`No words found for difficulty: ${difficulty}`);
       return;
     }
     
-    // Filter to only include words that have corresponding clues
     let availableWords = wordBanks[difficulty].filter(word => {
       return clueBank[difficulty] && clueBank[difficulty][word.toLowerCase()];
     });
-    
-    console.log(`Filtered ${wordBanks[difficulty].length} words down to ${availableWords.length} words with clues for ${difficulty}`);
     
     if (availableWords.length === 0) {
       console.error(`No words with clues found for difficulty: ${difficulty}`);
@@ -977,7 +961,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     let targetWordCount = Math.floor(Math.random() * (max - min + 1)) + min;
-    // Adjust target if we don't have enough words with clues
     if (targetWordCount > availableWords.length) {
       targetWordCount = Math.min(max, availableWords.length);
     }
@@ -986,27 +969,22 @@ document.addEventListener('DOMContentLoaded', () => {
     let maxAttempts = 50;
     
     while (wordsMap.length < targetWordCount && attempts < maxAttempts) {
-      // Reset for new attempt
       solutionGrid = Array.from({ length: gridSize }, () => Array(gridSize).fill(""));
       playerGrid = Array.from({ length: gridSize }, () => Array(gridSize).fill(""));
       wordsMap = [];
       clueCounter = 1;
       
-      // Use only words that have clues
       let shuffledWords = [...availableWords].sort(() => 0.5 - Math.random());
       
       if (shuffledWords.length > 0) {
-        // Place first word in center
         let firstWord = shuffledWords[0];
         let startCol = Math.floor((gridSize - firstWord.length) / 2);
         placeWord(firstWord, Math.floor(gridSize / 2), startCol, "across");
       }
       
-      // Try to place remaining words
       for (let i = 1; i < shuffledWords.length && wordsMap.length < targetWordCount; i++) {
         let word = shuffledWords[i];
         if (placeWordSmart(word)) {
-          // Word placed successfully
         }
       }
       
@@ -1080,6 +1058,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return true;
   }
 
+  // --- FIXED: Mobile-optimized cell rendering and selection ---
   function renderGrid() {
     const cw = document.getElementById("crossword");
     cw.innerHTML = "";
@@ -1101,11 +1080,12 @@ document.addEventListener('DOMContentLoaded', () => {
       minCol = Math.max(0, minCol - 1);
       maxCol = Math.min(gridSize - 1, maxCol + 1);
       const actualWidth = maxCol - minCol + 1;
-      const isMobile = window.innerWidth <= 600;
-      const cellSize = isMobile ? '28px' : '32px';
+      const isMobileDevice = window.innerWidth <= 600;
+      const cellSize = isMobileDevice ? '28px' : '32px';
       cw.style.gridTemplateColumns = `repeat(${actualWidth}, ${cellSize})`;
       cw.style.width = 'fit-content';
       cw.style.maxWidth = '100%';
+      
       for (let r = minRow; r <= maxRow; r++) {
         for (let c = minCol; c <= maxCol; c++) {
           let div = document.createElement("div");
@@ -1114,6 +1094,7 @@ document.addEventListener('DOMContentLoaded', () => {
           div.dataset.col = c;
           const currentTheme = (typeof(Storage) !== "undefined" && localStorage) ? localStorage.getItem('theme') : 'dark';
           div.classList.toggle('light-mode', currentTheme === 'light');
+          
           if (solutionGrid[r][c] === "") {
             div.classList.add("black");
             div.classList.toggle('light-mode', currentTheme === 'light');
@@ -1130,15 +1111,12 @@ document.addEventListener('DOMContentLoaded', () => {
               div.textContent = playerGrid[r][c].toUpperCase();
             }
             
-            // FIXED: Mobile touch events for word selection
-            div.addEventListener('touchstart', (e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            });
-            
-            div.addEventListener('touchend', (e) => {
-              e.preventDefault();
-              e.stopPropagation();
+            // --- FIXED: Unified cell selection for both mobile and desktop ---
+            function handleCellSelection(event) {
+              if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
               
               // Find ALL words that contain this cell
               let wordsAtCell = wordsMap.filter(w =>
@@ -1162,36 +1140,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 focusCell();
                 focusMobileInput();
               }
-            });
+            }
             
-            // FIXED: Desktop click handler (keep existing functionality)
-            div.onclick = (e) => {
-              // Only trigger if not a touch device or if touch events didn't fire
-              if (!('ontouchstart' in window)) {
-                // Find ALL words that contain this cell
-                let wordsAtCell = wordsMap.filter(w =>
-                  r >= w.row && c >= w.col &&
-                  (w.dir === "across" ? r === w.row && c < w.col + w.word.length : c === w.col && r < w.row + w.word.length)
-                );
-                
-                if (wordsAtCell.length > 0) {
-                  // If multiple words intersect, prefer the one that's not currently selected
-                  let clickedWord = wordsAtCell.length > 1 && activeWord && wordsAtCell.includes(activeWord) 
-                    ? wordsAtCell.find(w => w !== activeWord) || wordsAtCell[0]
-                    : wordsAtCell[0];
-                  
-                  selectWord(clickedWord);
-                  // Set activeCellIndex to the clicked cell position within the word
-                  if (clickedWord.dir === "across") {
-                    activeCellIndex = c - clickedWord.col;
-                  } else {
-                    activeCellIndex = r - clickedWord.row;
-                  }
-                  focusCell();
-                  focusMobileInput();
-                }
-              }
-            };
+            // Touch events for mobile
+            div.addEventListener('touchstart', (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }, { passive: false });
+            
+            div.addEventListener('touchend', handleCellSelection, { passive: false });
+            
+            // Click events for desktop (only fire if no touch capability)
+            if (!('ontouchstart' in window)) {
+              div.addEventListener('click', handleCellSelection);
+            }
           }
           cw.appendChild(div);
         }
@@ -1199,7 +1161,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // --- FIXED: Enhanced Clue Bank with better clues that don't contain the word ---
+  // --- Enhanced Clue Bank ---
   const clueBank = {
     easy: {
       animal: 'Living creature that moves and breathes',
@@ -1298,7 +1260,6 @@ document.addEventListener('DOMContentLoaded', () => {
       future: 'Time that has not yet happened',
       dreams: 'Images and thoughts during sleep',
       clouds: 'White fluffy formations in the sky',
-      light: 'Illumination that lets you see',
       spring: 'Season when flowers bloom',
       autumn: 'Season when leaves fall',
       forest: 'Large area covered with trees',
@@ -1329,7 +1290,6 @@ document.addEventListener('DOMContentLoaded', () => {
       vacuum: 'Machine that sucks up dirt',
       walrus: 'Large marine mammal with tusks',
       yonder: 'Over there in the distance',
-      // New easy word clues
       bridge: 'Structure that spans over water or roads',
       cheese: 'Dairy product made from milk',
       clowns: 'Entertainers with painted faces',
@@ -1567,7 +1527,65 @@ document.addEventListener('DOMContentLoaded', () => {
       warmth: 'Quality of being warm',
       xylem: 'Plant tissue that transports water',
       yields: 'Produces or gives way to',
-      accord: 'Agreement or harmony'
+      accord: 'Agreement or harmony',
+      balance: 'Equal distribution of weight',
+      capture: 'Catch and hold securely',
+      develop: 'Grow or bring into being',
+      economy: 'System of trade and industry',
+      freedom: 'State of being free',
+      general: 'Affecting all or most',
+      justice: 'Fair treatment under law',
+      liberty: 'Freedom from oppression',
+      natural: 'Existing in nature',
+      protect: 'Keep safe from harm',
+      quality: 'Standard of excellence',
+      respect: 'Admiration for someone',
+      strange: 'Unusual or surprising',
+      thought: 'Idea or mental process',
+      understand: 'Comprehend the meaning',
+      victory: 'Success in struggle',
+      workshop: 'Room for manual work',
+      advanced: 'Far ahead in development',
+      beneath: 'Under or below',
+      crystal: 'Clear solid mineral',
+      express: 'Convey thoughts clearly',
+      foreign: 'From another country',
+      gesture: 'Movement of body parts',
+      harvest: 'Gather mature crops',
+      journey: 'Act of traveling',
+      nothing: 'Not anything at all',
+      outside: 'External area or surface',
+      perfect: 'Having no flaws',
+      quickly: 'At a fast speed',
+      special: 'Better than ordinary',
+      through: 'From one end to other',
+      upgrade: 'Improve to higher standard',
+      western: 'From or in the west',
+      younger: 'Less old in age',
+      absolute: 'Complete and total',
+      behavior: 'Way of acting',
+      contrast: 'Difference between things',
+      discover: 'Find something new',
+      elephant: 'Large gray mammal',
+      fraction: 'Part of a whole',
+      generate: 'Produce or create',
+      hospital: 'Medical care facility',
+      increase: 'Make or become larger',
+      knowledge: 'Facts and information',
+      language: 'System of communication',
+      material: 'Physical substance',
+      negative: 'Expressing denial',
+      operate: 'Control functioning of',
+      portion: 'Part of a whole',
+      require: 'Need for a purpose',
+      shelter: 'Protection from weather',
+      trouble: 'Difficulty or problems',
+      umbrella: 'Rain protection device',
+      vehicle: 'Means of transport',
+      welcome: 'Greet in friendly way',
+      bacteria: 'Microscopic organisms',
+      calendar: 'System of organizing days',
+      disorder: 'Lack of organization'
     },
     hard: {
       champion: 'Victor in a competition or contest',
@@ -1625,96 +1643,7 @@ document.addEventListener('DOMContentLoaded', () => {
       westernization: 'Adoption of Western culture',
       xerophyte: 'Plant adapted to dry conditions',
       yesteryear: 'Time in the recent past',
-      zygote: 'Fertilized egg cell',
-      // New hard word clues
-      acceleration: 'Rate of increase in velocity',
-      breakthrough: 'Important discovery or development',
-      comprehensive: 'Complete and including everything',
-      dimensional: 'Having measurable extent in space',
-      evolutionary: 'Relating to gradual development',
-      fluorescent: 'Emitting light when exposed to radiation',
-      hypothetical: 'Based on assumption rather than fact',
-      international: 'Existing between nations',
-      mathematical: 'Relating to mathematics',
-      psychological: 'Relating to the mind and behavior',
-      unprecedented: 'Never done or known before',
-      administrative: 'Relating to management of affairs',
-      constitutional: 'Relating to a constitution',
-      electromagnetic: 'Relating to electric and magnetic fields',
-      interdisciplinary: 'Combining multiple academic fields',
-      multidisciplinary: 'Involving several academic disciplines',
-      pharmaceutical: 'Relating to medicinal drugs',
-      representation: 'Action of speaking for someone',
-      transportation: 'System of moving people or goods',
-      archaeological: 'Relating to study of human history',
-      geographical: 'Relating to earth\'s features',
-      meteorological: 'Relating to weather and climate',
-      physiological: 'Relating to bodily functions',
-      sociological: 'Relating to society and social behavior',
-      anthropological: 'Relating to study of human culture',
-      chronological: 'Arranged in order of time',
-      genealogical: 'Relating to family lineage',
-      geological: 'Relating to earth\'s structure',
-      ideological: 'Relating to system of ideas',
-      mythological: 'Relating to traditional stories',
-      ornithological: 'Relating to study of birds',
-      pathological: 'Relating to disease or abnormality',
-      radiological: 'Relating to medical imaging',
-      theological: 'Relating to study of religion',
-      topological: 'Relating to spatial properties',
-      zoological: 'Relating to study of animals',
-      biochemical: 'Relating to chemical processes in living things',
-      geochemical: 'Relating to chemistry of earth materials',
-      mechanical: 'Relating to machines and motion',
-      optical: 'Relating to light and vision',
-      physical: 'Relating to material things',
-      statistical: 'Relating to collection of numerical data',
-      theoretical: 'Based on theory rather than practice',
-      practical: 'Relating to actual use',
-      electrical: 'Relating to electricity',
-      chemical: 'Relating to chemistry',
-      digital: 'Using computer technology',
-      logical: 'According to reason',
-      magical: 'Having supernatural powers',
-      musical: 'Relating to music',
-      political: 'Relating to government',
-      technical: 'Relating to specialized knowledge',
-      vertical: 'At right angles to horizontal',
-      horizontal: 'Parallel to the horizon',
-      diagonal: 'At an angle across',
-      national: 'Relating to a nation',
-      rational: 'Based on reason',
-      seasonal: 'Relating to seasons',
-      regional: 'Relating to a particular region',
-      personal: 'Belonging to a person',
-      professional: 'Relating to paid work',
-      educational: 'Relating to teaching',
-      recreational: 'Done for enjoyment',
-      informational: 'Providing information',
-      operational: 'Ready for use',
-      organizational: 'Relating to organization',
-      motivational: 'Providing motivation',
-      inspirational: 'Providing inspiration',
-      traditional: 'Following established customs',
-      conventional: 'Following accepted standards',
-      exceptional: 'Unusually good',
-      promotional: 'Relating to advertising',
-      devotional: 'Relating to religious worship',
-      emotional: 'Relating to feelings',
-      functional: 'Designed to be useful',
-      instructional: 'Providing teaching',
-      nutritional: 'Relating to food value',
-      proportional: 'Corresponding in size',
-      sensational: 'Causing great excitement',
-      transitional: 'Relating to change',
-      unconventional: 'Not following accepted standards',
-      unexceptional: 'Not particularly good',
-      unprofessional: 'Not meeting work standards',
-      multinational: 'Operating in several countries',
-      supernational: 'Transcending national boundaries',
-      transnational: 'Extending across nations',
-      institutional: 'Relating to organizations',
-      substitutional: 'Relating to replacement'
+      zygote: 'Fertilized egg cell'
     },
     kids: {
       balloon: 'Colorful floating party decoration',
@@ -1755,11 +1684,128 @@ document.addEventListener('DOMContentLoaded', () => {
       sandbox: 'Box filled with sand to play in',
       mailbox: 'Container for letters and packages',
       cabinet: 'Box with doors for storing things',
-      mailman: 'Person who brings your mail'
+      mailman: 'Person who brings your mail',
+      apple: 'Red or green fruit from trees',
+      bright: 'Full of light or shining',
+      school: 'Place where children learn',
+      house: 'Building where people live',
+      water: 'Clear liquid we drink',
+      light: 'Makes things bright so we can see',
+      world: 'The Earth and everything on it',
+      sound: 'Something you hear with your ears',
+      place: 'Location or spot',
+      right: 'Correct or opposite of left',
+      great: 'Very good or excellent',
+      small: 'Not big in size',
+      every: 'All of them, each one',
+      found: 'Discovered or located',
+      still: 'Not moving or continuing',
+      learn: 'Gain knowledge or skills',
+      think: 'Use your mind to consider',
+      never: 'Not at any time',
+      story: 'Tale or narrative',
+      money: 'Coins and bills for buying',
+      point: 'Sharp tip or main idea',
+      today: 'This current day',
+      music: 'Pleasant sounds and songs',
+      earth: 'The planet we live on',
+      space: 'Area beyond our planet',
+      magic: 'Special powers in fairy tales',
+      power: 'Strength or energy',
+      ocean: 'Very large body of salt water',
+      river: 'Long flowing body of water',
+      mountain: 'Very tall hill',
+      beach: 'Sandy area by the water',
+      forest: 'Large area with many trees',
+      flower: 'Pretty colored part of plants',
+      summer: 'Warm season after spring',
+      winter: 'Cold season with snow',
+      spring: 'Season when flowers bloom',
+      friend: 'Someone you like and play with',
+      happy: 'Feeling good and joyful',
+      smile: 'Happy expression on your face',
+      laugh: 'Sound you make when funny',
+      dance: 'Move your body to music',
+      party: 'Fun gathering with friends',
+      games: 'Fun activities to play',
+      sport: 'Physical game with rules',
+      island: 'Land surrounded by water',
+      bridge: 'Structure over water or road',
+      tower: 'Very tall building',
+      plane: 'Flying machine for travel',
+      train: 'Long vehicle on tracks',
+      bread: 'Food made from flour',
+      pizza: 'Round food with toppings',
+      fruit: 'Sweet food that grows on plants',
+      candy: 'Sweet treats and sweets',
+      honey: 'Sweet food made by bees',
+      sugar: 'Sweet white powder',
+      plant: 'Living thing that grows',
+      grass: 'Green covering on ground',
+      trees: 'Tall plants with branches',
+      birds: 'Flying creatures with feathers',
+      horse: 'Large animal you can ride',
+      sheep: 'Fluffy farm animal',
+      mouse: 'Small furry creature',
+      tiger: 'Large striped wild cat',
+      zebra: 'Horse with black and white stripes',
+      snake: 'Long reptile without legs',
+      fish: 'Swimming creature in water',
+      whale: 'Very large sea mammal',
+      shark: 'Large fish with sharp teeth',
+      eagle: 'Large bird that soars',
+      cloud: 'White fluffy things in sky',
+      storm: 'Bad weather with wind',
+      sunny: 'Bright with sunshine',
+      windy: 'With lots of wind blowing',
+      snowy: 'Covered with white snow',
+      rainy: 'When water falls from sky',
+      fresh: 'New or clean',
+      clean: 'Not dirty, washed',
+      dirty: 'Not clean, messy',
+      quick: 'Fast in movement',
+      slow: 'Not fast in movement',
+      high: 'Far up from ground',
+      deep: 'Going far down',
+      wide: 'Having great width',
+      thick: 'Not thin, having width',
+      thin: 'Not thick or fat',
+      heavy: 'Weighs a lot',
+      strong: 'Having great power',
+      brave: 'Not afraid of danger',
+      smart: 'Very intelligent',
+      funny: 'Makes you laugh',
+      crazy: 'Very silly or wild',
+      weird: 'Strange or unusual',
+      fancy: 'Very nice or decorated',
+      busy: 'Having lots to do',
+      lazy: 'Not wanting to work',
+      sleepy: 'Feeling tired',
+      awake: 'Not sleeping',
+      alive: 'Living, not dead',
+      round: 'Shaped like a circle',
+      square: 'Four-sided shape',
+      circle: 'Round shape like a ball',
+      heart: 'Shape that shows love',
+      stars: 'Bright dots in night sky',
+      boxes: 'Containers for storing',
+      chair: 'Furniture for sitting',
+      table: 'Flat surface for eating',
+      spoon: 'Tool for eating soup',
+      knife: 'Sharp tool for cutting',
+      clock: 'Shows what time it is',
+      phone: 'Device for talking to people',
+      radio: 'Device that plays music',
+      books: 'Things with pages to read',
+      paper: 'Thin sheets for writing',
+      paint: 'Colored liquid for art',
+      color: 'Red, blue, green, etc.',
+      green: 'Color of grass and leaves',
+      black: 'Dark color like night',
+      white: 'Light color like snow'
     }
   };
 
-  // FIXED: Remove debug logging for production
   function getClue(word) {
     const diff = currentDifficulty;
     const clue = clueBank[diff]?.[word.toLowerCase()];
@@ -1768,8 +1814,6 @@ document.addEventListener('DOMContentLoaded', () => {
       return clue;
     }
     
-    // Fallback - this should rarely trigger now
-    console.log(`No clue found for "${word}" in ${diff}, using fallback`);
     return `${word.length}-letter word: ${word.charAt(0).toUpperCase()}____`;
   }
 
@@ -1786,7 +1830,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const currentTheme = (typeof(Storage) !== "undefined" && localStorage) ? localStorage.getItem('theme') : 'dark';
       li.classList.toggle('light-mode', currentTheme === 'light');
       
-      // FIXED: Mark solved clues with visual indication
       if (w.solved) {
         li.classList.add('solved');
       }
@@ -1827,11 +1870,16 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function focusMobileInput() {
-    if (!isMobile()) {
-      setTimeout(() => { mobileInput.focus(); }, 100);
+    if (isMobile()) {
+      // On mobile, keep the input focused for virtual keyboard
+      setTimeout(() => { 
+        mobileInput.focus(); 
+        mobileInput.click();
+      }, 50);
     }
   }
 
+  // --- FIXED: Unified letter input handling for both desktop and mobile ---
   function handleLetterInput(letter) {
     if (!activeWord || gameOver) return;
     if (activeCellIndex >= activeWord.word.length) return;
@@ -1854,7 +1902,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // FIXED: Improved backspace handling - works from any position in word
+  // --- FIXED: Unified backspace handling for both desktop and mobile ---
   function handleBackspace() {
     if (!activeWord || gameOver) return;
     
@@ -1880,66 +1928,33 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function handleMobileInput(char) {
-    if (!activeWord || gameOver) return;
-    if (char && char.match(/^[a-zA-Z]$/)) {
-      handleLetterInput(char);
-    }
-  }
-
-  function handleMobileBackspace() {
-    if (!activeWord || gameOver) return;
-    
-    let row = activeWord.row + (activeWord.dir === "down" ? activeCellIndex : 0);
-    let col = activeWord.col + (activeWord.dir === "across" ? activeCellIndex : 0);
-    
-    // Clear current cell if it has content
-    if (playerGrid[row][col] !== "") {
-      playerGrid[row][col] = "";
-      renderGrid();
-      focusCell();
-      return;
-    }
-    
-    // If current cell is empty, move back to previous cell and clear it
-    if (activeCellIndex > 0) {
-      activeCellIndex--;
-      row = activeWord.row + (activeWord.dir === "down" ? activeCellIndex : 0);
-      col = activeWord.col + (activeWord.dir === "across" ? activeCellIndex : 0);
-      playerGrid[row][col] = "";
-      renderGrid();
-      focusCell();
-    }
-  }
-
+  // --- FIXED: Mobile input handling ---
   mobileInput.addEventListener('input', function(e) {
     e.preventDefault();
     const char = e.target.value.slice(-1);
-    if (char) {
-      handleMobileInput(char);
-      e.target.value = '';
+    if (char && char.match(/^[a-zA-Z]$/)) {
+      handleLetterInput(char);
     }
+    e.target.value = ''; // Clear the input
   });
 
   mobileInput.addEventListener('keydown', function(e) {
     if (e.key === 'Backspace') {
       e.preventDefault();
-      handleMobileBackspace();
+      handleBackspace();
     }
   });
 
-  gameAreaDiv.addEventListener('touchstart', function(e) {
-    if (activeWord && e.target.classList.contains('cell')) {
-      e.preventDefault();
-    }
-  });
-
+  // --- FIXED: Desktop keyboard handling ---
   document.addEventListener('keydown', (e) => {
     if (gameOver || !activeWord) return;
-    e.preventDefault();
+    
+    // Only handle game keys, don't prevent all defaults
     if (/^[a-zA-Z]$/.test(e.key)) {
+      e.preventDefault();
       handleLetterInput(e.key);
     } else if (e.key === "Backspace") {
+      e.preventDefault();
       handleBackspace();
     }
   });
@@ -1956,7 +1971,7 @@ document.addEventListener('DOMContentLoaded', () => {
       currentPuzzleWordsCompleted++;
       currentPuzzleScore += 10;
       updateHUD();
-      renderClues(); // Update clues to show solved state
+      renderClues();
       showFade(`Word "${wordObj.word.toUpperCase()}" Solved!`);
       if (wordsMap.every(w => w.solved)) {
         handlePuzzleEnd(true);
@@ -2048,7 +2063,7 @@ document.addEventListener('DOMContentLoaded', () => {
     checkWordCompletion(wordToHint);
   };
 
-  // --- Virtual Keyboard Logic ---
+  // --- FIXED: Virtual Keyboard Logic ---
   function isMobile() {
     return /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) || window.innerWidth <= 768;
   }
@@ -2092,6 +2107,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
     
+    // --- FIXED: Virtual keyboard button handling ---
     virtualKeyboard.querySelectorAll('button[data-key]').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
@@ -2100,11 +2116,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const key = btn.dataset.key;
         
         if (key === "Backspace") {
-          handleMobileBackspace(); // Use mobile-specific backspace
+          handleBackspace(); // Use unified backspace function
         } else if (key && key.match(/^[A-Z]$/)) {
-          handleLetterInput(key);
+          handleLetterInput(key); // Use unified letter input function
         }
         
+        // Visual feedback
         btn.style.transform = 'scale(0.95)';
         setTimeout(() => {
           btn.style.transform = '';
@@ -2117,13 +2134,13 @@ document.addEventListener('DOMContentLoaded', () => {
       
       btn.addEventListener('touchstart', (e) => {
         btn.style.transform = 'scale(0.95)';
-      });
+      }, { passive: true });
       
       btn.addEventListener('touchend', (e) => {
         setTimeout(() => {
           btn.style.transform = '';
         }, 100);
-      });
+      }, { passive: true });
     });
   }
   
@@ -2184,7 +2201,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setTheme(currentTheme === 'dark' ? 'dark' : 'light');
   showVirtualKeyboard(false);
   
-  console.log('🎮 NES Crossword Game Enhanced Edition initialized!');
+  console.log('🎮 NES Crossword Game - Mobile Fixed Edition initialized!');
 });
 </script>
 </body>
