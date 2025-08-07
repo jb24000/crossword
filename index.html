@@ -12,10 +12,12 @@
   <meta name="application-name" content="NES Crossword">
 
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="msapplication-tap-highlight" content="no" />
   <title>🎮 NES Crossword 🎮</title>
   <style>
-    body { font-family: monospace, 'Courier New', Courier; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: background 0.4s, color 0.4s; }
+    body { font-family: monospace, 'Courier New', Courier; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: background 0.4s, color 0.4s; touch-action: manipulation; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
     .container { max-width: 480px; margin: 0 auto; background: rgba(0,0,0,0.4); border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 -20px 40px rgba(0,0,0,0.3); padding: 32px 18px 24px 18px; display: flex; flex-direction: column; align-items: center; }
     .title { font-size: 24px; color: #00ff88; margin-bottom: 10px; font-weight: bold; text-shadow: 2px 2px 0px #000; letter-spacing: 1px; text-align: center; }
     .toggles { display: flex; justify-content: center; gap: 24px; margin-bottom: 18px; }
@@ -331,6 +333,7 @@
     </label>
   </div>
   <div class="music-controls">
+    <button id="beeps-only">🎵 Beeps Only</button>
     <button id="prev-track">⏮ Prev</button>
     <button id="next-track">Next ⏭</button>
   </div>
@@ -613,6 +616,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function handleSoundToggle(soundOn) {
     if (soundOn) {
+      // Check if we're on Safari/iPad where YouTube ads are problematic
+      if (/Safari|iPad/i.test(navigator.userAgent) && !/Chrome/i.test(navigator.userAgent)) {
+        showFade('🔊 Sound ON - Beeps Only (Safari Optimized)');
+        // Don't initialize YouTube music on Safari to avoid ads
+        return;
+      }
       showFade('🔊 Sound ON - Click anywhere to start music!');
     } else {
       const iframe = document.getElementById('yt-music');
@@ -626,6 +635,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function initializeMusic() {
+    // Skip YouTube music on Safari/iPad to avoid ads - use beeps only
+    if (/Safari|iPad/i.test(navigator.userAgent) && !/Chrome/i.test(navigator.userAgent)) {
+      showFade('🎵 Retro Beep Mode Active!');
+      musicInitialized = true;
+      return;
+    }
+    
     if (!soundToggle.checked || musicInitialized) return;
     musicInitialized = true;
     loadTrack(0);
@@ -638,7 +654,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const videoId = playlist[currentTrackIndex];
     const iframe = document.getElementById('yt-music');
     if (!iframe) return;
-    const newSrc = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=0&controls=0&mute=0&enablejsapi=1&origin=${window.location.origin}&rel=0&start=0`;
+    
+    // Enhanced YouTube parameters to suppress ads and improve compatibility
+    const newSrc = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=0&controls=0&mute=0&enablejsapi=1&origin=${window.location.origin}&rel=0&start=0&modestbranding=1&playsinline=1&fs=0&cc_load_policy=0&iv_load_policy=3&autohide=1`;
     iframe.src = newSrc;
     musicStarted = true;
     createBeepSound(600, 150);
@@ -650,6 +668,14 @@ document.addEventListener('DOMContentLoaded', () => {
       showFade('🔇 Turn on sound first!');
       return;
     }
+    
+    // On Safari/iPad, just use beep sounds instead of YouTube music
+    if (/Safari|iPad/i.test(navigator.userAgent) && !/Chrome/i.test(navigator.userAgent)) {
+      createBeepSound(400 + (direction * 200), 300);
+      showFade(`🎵 Beep Track ${Math.abs(direction) === 1 ? (direction > 0 ? 'Up' : 'Down') : 'Change'}`);
+      return;
+    }
+    
     if (!musicInitialized) {
       initializeMusic();
       return;
@@ -666,6 +692,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('prev-track').addEventListener('click', () => changeTrack(-1));
   document.getElementById('next-track').addEventListener('click', () => changeTrack(1));
+  
+  // Beeps only button - stops all YouTube music
+  document.getElementById('beeps-only').addEventListener('click', () => {
+    const iframe = document.getElementById('yt-music');
+    if (iframe) {
+      iframe.src = 'about:blank';
+    }
+    musicInitialized = false;
+    musicStarted = false;
+    createBeepSound(600, 200);
+    showFade('🎵 Retro Beeps Only Mode!');
+  });
+
+  // Immediately stop any YouTube content on Safari/iPad
+  if (/Safari|iPad/i.test(navigator.userAgent) && !/Chrome/i.test(navigator.userAgent)) {
+    const iframe = document.getElementById('yt-music');
+    if (iframe) {
+      iframe.src = 'about:blank';
+      iframe.style.display = 'none';
+    }
+  }
 
   function setTheme(mode) {
     document.body.classList.toggle('light-mode', mode === 'light');
@@ -814,8 +861,12 @@ document.addEventListener('DOMContentLoaded', () => {
     
     updateHUD();
     
-    if (isMobile()) {
+    if (isMobile() || isTablet()) {
       showVirtualKeyboard(true);
+      // Ensure mobile input is blurred on tablets to prevent system keyboard
+      if (isTablet()) {
+        mobileInput.blur();
+      }
     }
   }
 
@@ -922,8 +973,10 @@ document.addEventListener('DOMContentLoaded', () => {
     gameAreaDiv.style.display = 'none';
     renderLeaderboard();
     
-    if (isMobile()) {
+    if (isMobile() || isTablet()) {
       showVirtualKeyboard(false);
+      // Ensure mobile input is blurred
+      mobileInput.blur();
     }
   };
 
@@ -2095,7 +2148,8 @@ document.addEventListener('DOMContentLoaded', () => {
   
   function showVirtualKeyboard(show) {
     if (virtualKeyboard) {
-      if (show && isMobile()) {
+      // Always show virtual keyboard on tablets and mobile devices
+      if (show && (isMobile() || isTablet())) {
         virtualKeyboard.classList.remove('hidden');
         virtualKeyboard.style.display = 'flex';
         const currentTheme = (typeof(Storage) !== "undefined" && localStorage) ? localStorage.getItem('theme') : 'dark';
@@ -2199,6 +2253,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function createBeepSound(frequency, duration) {
+    if (!soundToggle.checked) return;
+    
     try {
       const audioContext = new (window.AudioContext || window.webkitAudioContext)();
       const oscillator = audioContext.createOscillator();
@@ -2207,16 +2263,16 @@ document.addEventListener('DOMContentLoaded', () => {
       oscillator.connect(gainNode);
       gainNode.connect(audioContext.destination);
       
-      oscillator.frequency.value = frequency;
+      oscillator.frequency.value = frequency || 600;
       oscillator.type = 'square';
       
-      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration / 1000);
+      gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + (duration || 200) / 1000);
       
       oscillator.start(audioContext.currentTime);
-      oscillator.stop(audioContext.currentTime + duration / 1000);
+      oscillator.stop(audioContext.currentTime + (duration || 200) / 1000);
     } catch (e) {
-      console.log('Could not create beep sound:', e);
+      console.log('Audio context not available, silent mode');
     }
   }
 
@@ -2226,7 +2282,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setTheme(currentTheme === 'dark' ? 'dark' : 'light');
   showVirtualKeyboard(false);
   
-  console.log('🎮 NES Crossword Game - Mobile Fixed Edition initialized!');
+  console.log('🎮 NES Crossword Game - Ad-Free Safari/iPad Optimized Edition initialized!');
 });
 </script>
 </body>
